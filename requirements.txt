@@ -1,0 +1,7 @@
+pandas
+numpy
+pymysql
+sqlalchemy
+tqdm
+facebook_business
+google-ads
