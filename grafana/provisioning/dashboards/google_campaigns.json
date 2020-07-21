@@ -1,0 +1,2284 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": 2,
+    "iteration": 1595344117521,
+    "links": [],
+    "panels": [
+      {
+        "content": "\n<h1><p style=\"text-align: center;\">Google Statistics - Quick View of All Campaigns Summed</p></h1>\n\n<hr class=\"rounded\">\n",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 29,
+        "mode": "html",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "transparent": true,
+        "type": "text"
+      },
+      {
+        "datasource": "MySQL",
+        "description": "Total cost in DKK",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "#eab839",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 0,
+          "y": 2
+        },
+        "id": 21,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "mean"
+            ],
+            "values": true
+          }
+        },
+        "pluginVersion": "7.0.0",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(cost) AS \"cost\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\n",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Expenditure during specified timeperiod",
+        "transparent": true,
+        "type": "stat"
+      },
+      {
+        "datasource": "MySQL",
+        "description": "The number of clicks",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 6,
+          "y": 2
+        },
+        "id": 23,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "mean"
+            ],
+            "values": true
+          }
+        },
+        "pluginVersion": "7.0.0",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(clicks) AS \"clicks\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "HR_Probability"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "ml_handset_replacement",
+            "timeColumn": "Updatetime",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Clicks during the specified period",
+        "transparent": true,
+        "type": "stat"
+      },
+      {
+        "datasource": "MySQL",
+        "description": "An action that's counted when someone interacts with your ad (for example, clicks a text ad or views a video ad) and then takes an action that you’ve defined as valuable to your business, such as an online purchase or a call to your business from a mobile phone.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "#6ed0e0",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 12,
+          "y": 2
+        },
+        "id": 25,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "mean"
+            ],
+            "values": true
+          }
+        },
+        "pluginVersion": "7.0.0",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(conversions) AS \"conversions\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Conversions during the specified period",
+        "transparent": true,
+        "type": "stat"
+      },
+      {
+        "datasource": "MySQL",
+        "description": "How often your ad is shown. An impression is counted each time your ad is shown on a search result page or other site on the Google Network.\n\n* Each time your ad appears on Google or the Google Network, it's counted as one impression.\n* In some cases, only a section of your ad may be shown. For example, in Google Maps, we may show only your business name and location or only your business name and the first line of your ad text.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "#e24d42",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 6,
+          "x": 18,
+          "y": 2
+        },
+        "id": 26,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "mean"
+            ],
+            "values": true
+          }
+        },
+        "pluginVersion": "7.0.0",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(impressions) AS \"impressions\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Impressions during the specified period",
+        "transparent": true,
+        "type": "stat"
+      },
+      {
+        "content": "\n<h1><p style=\"text-align: center;\">Google Statistics - Campaign View</p></h1>\n\n<hr class=\"rounded\">\n",
+        "datasource": null,
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 12,
+          "x": 6,
+          "y": 8
+        },
+        "id": 7,
+        "mode": "html",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "transparent": true,
+        "type": "text"
+      },
+      {
+        "datasource": "MySQL",
+        "description": "Cost in DKK",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "super-light-blue",
+                  "value": null
+                },
+                {
+                  "color": "dark-blue",
+                  "value": 60
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 6,
+          "y": 10
+        },
+        "id": 19,
+        "options": {
+          "displayMode": "gradient",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "mean"
+            ],
+            "limit": 5,
+            "values": true
+          },
+          "showUnfilled": false
+        },
+        "pluginVersion": "7.0.0",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(cost) AS \"cost\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY name\nORDER BY cost DESC;",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Expenditure on campaigns",
+        "transparent": true,
+        "type": "bargauge"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "Cost in DKK",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "super-light-blue",
+                  "value": null
+                },
+                {
+                  "color": "dark-blue",
+                  "value": 60
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 18
+        },
+        "hiddenSeries": false,
+        "id": 28,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pluginVersion": "7.0.0",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(cost) AS \"cost\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  name in($Campaigns) \nGROUP BY 1, name\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Expenditure",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "A ratio showing how often people who see your ad end up clicking it. Clickthrough rate (CTR) can be used to gauge how well your keywords and ads are performing.\n",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "super-light-blue",
+                  "value": null
+                },
+                {
+                  "color": "dark-blue",
+                  "value": 60
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 18
+        },
+        "hiddenSeries": false,
+        "id": 30,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pluginVersion": "7.0.0",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  avg(ctr) AS \"ctr\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  name in($Campaigns) \nGROUP BY 1, name\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Clickthrough rate (CTR)",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "Conversion Value is a measure of the value of all the conversions given a self defined value metric",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "super-light-blue",
+                  "value": null
+                },
+                {
+                  "color": "dark-blue",
+                  "value": 60
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 26
+        },
+        "hiddenSeries": false,
+        "id": 31,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pluginVersion": "7.0.0",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(conversions_value) AS \"conversions_value\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  name in($Campaigns) \nGROUP BY 1, name\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Conversions Value",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "How often your ad is shown. An impression is counted each time your ad is shown on a search result page or other site on the Google Network.\n",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "super-light-blue",
+                  "value": null
+                },
+                {
+                  "color": "dark-blue",
+                  "value": 60
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 26
+        },
+        "hiddenSeries": false,
+        "id": 32,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pluginVersion": "7.0.0",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(Impressions) AS \"Impressions\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  name in($Campaigns) \nGROUP BY 1, name\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Impressions",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "The number of clicks",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "super-light-blue",
+                  "value": null
+                },
+                {
+                  "color": "dark-blue",
+                  "value": 60
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 34
+        },
+        "hiddenSeries": false,
+        "id": 33,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pluginVersion": "7.0.0",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(clicks) AS \"clicks\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  name in($Campaigns) \nGROUP BY 1, name\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Clicks",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "An action that's counted when someone interacts with your ad (for example, clicks a text ad or views a video ad) and then takes an action that you’ve defined as valuable to your business, such as an online purchase or a call to your business from a mobile phone.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {},
+            "mappings": [],
+            "thresholds": {
+              "mode": "percentage",
+              "steps": [
+                {
+                  "color": "super-light-blue",
+                  "value": null
+                },
+                {
+                  "color": "dark-blue",
+                  "value": 60
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 34
+        },
+        "hiddenSeries": false,
+        "id": 34,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pluginVersion": "7.0.0",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(conversions) AS \"conversions\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  name in($Campaigns) \nGROUP BY 1, name\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "clicks",
+            "timeColumnType": "int",
+            "where": [
+              {
+                "name": "$__unixEpochFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Conversions",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "content": "\n<h1><p style=\"text-align: center;\">Summed Google Statistics</p></h1>\n\n<hr class=\"rounded\">\n",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 12,
+          "x": 6,
+          "y": 42
+        },
+        "id": 6,
+        "mode": "html",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "transparent": true,
+        "type": "text"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "Cost in DKK",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 2,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 6,
+          "y": 44
+        },
+        "hiddenSeries": false,
+        "id": 17,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": false,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(cost) AS \"cost\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY 1\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "HR_Probability"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "ml_handset_replacement",
+            "timeColumn": "Updatetime",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Expenditure on all active campaigns",
+        "tooltip": {
+          "shared": false,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "The number of clicks",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 2,
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 52
+        },
+        "hiddenSeries": false,
+        "id": 2,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": false,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null as zero",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {}
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(clicks) AS \"clicks\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY 1\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "avg"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "clicks"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "date",
+            "timeColumnType": "datetime",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Clicks on all active campaigns",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": false
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "An action that's counted when someone interacts with your ad (for example, clicks a text ad or views a video ad) and then takes an action that you’ve defined as valuable to your business, such as an online purchase or a call to your business from a mobile phone.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 2,
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 52
+        },
+        "hiddenSeries": false,
+        "id": 9,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": false,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  date AS \"time\",\n  sum(conversions) as \"conversions\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY 1\nORDER BY date",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "conversions"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "google_campaign_report",
+            "timeColumn": "date",
+            "timeColumnType": "datetime",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Conversions for all active campaigns",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "Conversion Value is a measure of the value of all the conversions given a self defined value metric",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 2,
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 61
+        },
+        "hiddenSeries": false,
+        "id": 11,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": false,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(conversions_value) AS \"conversions_value\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY 1\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "HR_Probability"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "ml_handset_replacement",
+            "timeColumn": "Updatetime",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Conversion value of all active campaigns",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "How often your ad is shown. An impression is counted each time your ad is shown on a search result page or other site on the Google Network.\n",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 2,
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 61
+        },
+        "hiddenSeries": false,
+        "id": 13,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": false,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(impressions) AS \"impressions\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY 1\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "HR_Probability"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "ml_handset_replacement",
+            "timeColumn": "Updatetime",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Impressions for all active campaigns",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "MySQL",
+        "description": "A ratio showing how often people who see your ad end up clicking it. Clickthrough rate (CTR) can be used to gauge how well your keywords and ads are performing.\n\n* CTR is the number of clicks that your ad receives divided by the number of times your ad is shown: clicks ÷ impressions = CTR. For example, if you had 5 clicks and 100 impressions, then your CTR would be 5%.\n* Each of your ads and keywords have their own CTRs that you can see listed in your account.\n* A high CTR is a good indication that users find your ads helpful and relevant. CTR also contributes to your keyword's expected CTR, which is a component of Ad Rank. Note that a good CTR is relative to what you're advertising and on which networks.\n* You can use CTR to gauge which ads and keywords are successful for you and which need to be improved. The more your keywords and ads relate to each other and to your business, the more likely a user is to click on your ad after searching on your keyword phrase.",
+        "fieldConfig": {
+          "defaults": {
+            "custom": {}
+          },
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 2,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 6,
+          "y": 70
+        },
+        "hiddenSeries": false,
+        "id": 15,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": false,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  avg(ctr) AS \"ctr\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY 1\nORDER BY $__timeGroup(date,$__interval)",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "HR_Probability"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "ml_handset_replacement",
+            "timeColumn": "Updatetime",
+            "timeColumnType": "timestamp",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Average clickthrough rate for all active campaigns",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transparent": true,
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      }
+    ],
+    "schemaVersion": 25,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "allValue": "",
+          "current": {
+            "selected": true,
+            "tags": [],
+            "text": "All",
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": "MySQL",
+          "definition": "SELECT DISTINCT name FROM output.google_campaign_report",
+          "hide": 0,
+          "includeAll": true,
+          "label": null,
+          "multi": true,
+          "name": "Campaigns",
+          "options": [
+            {
+              "selected": true,
+              "text": "All",
+              "value": "$__all"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - Brand (YouSee) [BrandOnly]",
+              "value": "Search - KONTINUERLIG - Brand (YouSee) [BrandOnly]"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - BB - Generisk - Bredbånd",
+              "value": "Search - KONTINUERLIG - BB - Generisk - Bredbånd"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - BB - Brand + Generisk",
+              "value": "Search - KONTINUERLIG - BB - Brand + Generisk"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - MV - Brand + Generisk",
+              "value": "Search - KONTINUERLIG - MV - Brand + Generisk"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - MV - Generisk - Mobil",
+              "value": "Search - KONTINUERLIG - MV - Generisk - Mobil"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - BB - Brand (TDC) + Generisk",
+              "value": "Search - KONTINUERLIG - BB - Brand (TDC) + Generisk"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - Brand (TDC)  [BrandOnly]",
+              "value": "Search - KONTINUERLIG - Brand (TDC)  [BrandOnly]"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Brand + Generisk - Bland Selv - Nysalg",
+              "value": "Search - KONTINUERLIG - TV - Brand + Generisk - Bland Selv - Nysalg"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Brand + Generisk - Bland Selv - Upsales",
+              "value": "Search - KONTINUERLIG - TV - Brand + Generisk - Bland Selv - Upsales"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Generisk - Bland Selv - Nysalg",
+              "value": "Search - KONTINUERLIG - TV - Generisk - Bland Selv - Nysalg"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - YouSee More - Generisk",
+              "value": "Search - KONTINUERLIG - YouSee More - Generisk"
+            },
+            {
+              "selected": false,
+              "text": "Shopping - KONTINUERLIG - MV - Huawei P Smart",
+              "value": "Shopping - KONTINUERLIG - MV - Huawei P Smart"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - BB - Generisk - Fiber",
+              "value": "Search - KONTINUERLIG - BB - Generisk - Fiber"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - BB - Brand + Generisk - Fiber",
+              "value": "Search - KONTINUERLIG - BB - Brand + Generisk - Fiber"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - MV - Terminaler - Brand + iphone",
+              "value": "Search - KONTINUERLIG - MV - Terminaler - Brand + iphone"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - Brand (Xee)  [BrandOnly]",
+              "value": "Search - KONTINUERLIG - Brand (Xee)  [BrandOnly]"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - BB - Generisk - Internet",
+              "value": "Search - KONTINUERLIG - BB - Generisk - Internet"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - Brand (Nuuday)  [BrandOnly]",
+              "value": "Search - KONTINUERLIG - Brand (Nuuday)  [BrandOnly]"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - MV - Generisk - Tele",
+              "value": "Search - KONTINUERLIG - MV - Generisk - Tele"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - BB - Generisk - Flytning",
+              "value": "Search - KONTINUERLIG - BB - Generisk - Flytning"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - MBB - Brand + Generisk",
+              "value": "Search - KONTINUERLIG - MBB - Brand + Generisk"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Generisk - TV",
+              "value": "Search - KONTINUERLIG - TV - Generisk - TV"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Generisk - Streaming",
+              "value": "Search - KONTINUERLIG - TV - Generisk - Streaming"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Generisk - TV Pakker",
+              "value": "Search - KONTINUERLIG - TV - Generisk - TV Pakker"
+            },
+            {
+              "selected": false,
+              "text": "Shopping - KONTINUERLIG - MV - iPhone 11",
+              "value": "Shopping - KONTINUERLIG - MV - iPhone 11"
+            },
+            {
+              "selected": false,
+              "text": "Shopping - KONTINUERLIG - MV - Samsung Galaxy S10 + S10 Plus",
+              "value": "Shopping - KONTINUERLIG - MV - Samsung Galaxy S10 + S10 Plus"
+            },
+            {
+              "selected": false,
+              "text": "YouTube - ALWAYS ON - INTERNET - Y2020- Bred",
+              "value": "YouTube - ALWAYS ON - INTERNET - Y2020- Bred"
+            },
+            {
+              "selected": false,
+              "text": "YouTube - ALWAYS ON - INTERNET - Y2020 - Bumper",
+              "value": "YouTube - ALWAYS ON - INTERNET - Y2020 - Bumper"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - Brand (Fullrate) - ej-kunder [ex2]  [BrandOnly]",
+              "value": "Search - KONTINUERLIG - Brand (Fullrate) - ej-kunder [ex2]  [BrandOnly]"
+            },
+            {
+              "selected": false,
+              "text": "Shopping - KONTINUERLIG - MV - Huawei P30 Pro",
+              "value": "Shopping - KONTINUERLIG - MV - Huawei P30 Pro"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Generisk - sort signal [ex]",
+              "value": "Search - KONTINUERLIG - TV - Generisk - sort signal [ex]"
+            },
+            {
+              "selected": false,
+              "text": "Shopping - KONTINUERLIG - MV - Huawei P30 Lite",
+              "value": "Shopping - KONTINUERLIG - MV - Huawei P30 Lite"
+            },
+            {
+              "selected": false,
+              "text": "Shopping - KONTINUERLIG - MV - Samsung Galaxy S20",
+              "value": "Shopping - KONTINUERLIG - MV - Samsung Galaxy S20"
+            },
+            {
+              "selected": false,
+              "text": "Search - KAMPAGNE - YS More - Activation",
+              "value": "Search - KAMPAGNE - YS More - Activation"
+            },
+            {
+              "selected": false,
+              "text": "Shopping - KONTINUERLIG - MV - OnePlus 8",
+              "value": "Shopping - KONTINUERLIG - MV - OnePlus 8"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - MV - Generisk - generelle",
+              "value": "Search - KONTINUERLIG - MV - Generisk - generelle"
+            },
+            {
+              "selected": false,
+              "text": "YouTube - KAMPAGNE - MV - iPhone 11 - w25-27 Y2020 - Bumper RT",
+              "value": "YouTube - KAMPAGNE - MV - iPhone 11 - w25-27 Y2020 - Bumper RT"
+            },
+            {
+              "selected": false,
+              "text": "YouTube - KAMPAGNE - MV - iPhone 11 - W25-27 Y2020",
+              "value": "YouTube - KAMPAGNE - MV - iPhone 11 - W25-27 Y2020"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - MV - iPhone 11.",
+              "value": "Search - KONTINUERLIG - MV - iPhone 11."
+            },
+            {
+              "selected": false,
+              "text": "Shopping - KONTINUERLIG - MV - Sony Xperia 10 II",
+              "value": "Shopping - KONTINUERLIG - MV - Sony Xperia 10 II"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Generisk - TV2 PLAY",
+              "value": "Search - KONTINUERLIG - TV - Generisk - TV2 PLAY"
+            },
+            {
+              "selected": false,
+              "text": "Search - KONTINUERLIG - TV - Brand + generisk - TV2 PLAY",
+              "value": "Search - KONTINUERLIG - TV - Brand + generisk - TV2 PLAY"
+            }
+          ],
+          "query": "SELECT DISTINCT name FROM output.google_campaign_report",
+          "refresh": 0,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-30d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ]
+    },
+    "timezone": "",
+    "title": "Google Campaigns",
+    "uid": "EF86BunMk",
+    "version": 5
+  }
