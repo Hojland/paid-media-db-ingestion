@@ -175,5 +175,5 @@ pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,visualstudiocode,dotenv,venv
 
-credentials/paid-media-db-ingestion-e95489028100.json
+credentials/*
 .DS_Store
