@@ -11,7 +11,7 @@ pipeline {
                     {
                     sh "docker login -u '${DOCKER_USR}' -p ${DOCKER_PW} https://harbor.aws.c.dk/"
                     sh "cp ${gcm_credentialfile} paid-media-db-ingestion-e95489028100.json"
-                    image = docker.build("--build-arg GCM_CREDENTIAL_FILE=paid-media-db-ingestion-e95489028100.json", "${JOB_NAME}:${BUILD_ID}")
+                    image = docker.build("${JOB_NAME}:${BUILD_ID}", '--build-arg GCM_CREDENTIAL_FILE=paid-media-db-ingestion-e95489028100.json .')
                     }
                 }
             }
