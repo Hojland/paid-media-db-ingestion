@@ -21,7 +21,6 @@ from utils import utils, sql_utils, google_campaign_manager_utils
 
 API_NAME = 'dfareporting'
 API_USER_ID = os.getenv('GOOGLE_CM_API_USER_ID')
-CLIENT_SECRETS_FILE = '/app/credentials/google_client_secrets.json'
 API_VERSION = 'v3.3'
 API_SCOPES = ['https://www.googleapis.com/auth/dfareporting',
               'https://www.googleapis.com/auth/dfatrafficking',
