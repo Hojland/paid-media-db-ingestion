@@ -4,7 +4,11 @@ LABEL maintainer=molheh@nuuday.dk
 
 ARG GCM_CREDENTIAL_FILE
 
-COPY $GCM_CREDENTIAL_FILE /app/credentials/
+COPY $GCM_CREDENTIAL_FILE /app/credentials/paid-media-db-ingestion-e95489028100.json
+
+ENV GOOGLE_ADS_PATH_TO_PRIVATE_KEY_FILE=/app/credentials/paid-media-db-ingestion-e95489028100.json
+
+ENV GOOGLE_ADS_DELEGATED_ACCOUNT=nuuday-paid@paid-media-db-ingestion.iam.gserviceaccount.com
 
 COPY src/ /app/src/
 
