@@ -2,9 +2,11 @@ FROM harbor.aws.c.dk/datascience/base/python-prod:latest
 
 LABEL maintainer=molheh@nuuday.dk
 
-COPY src/ /app/src/
+ARG GCM_CREDENTIAL_FILE
 
-COPY credentials/ /app/credentials/
+COPY $GCM_CREDENTIAL_FILE /app/credentials/
+
+COPY src/ /app/src/
 
 COPY requirements.txt /app
 
