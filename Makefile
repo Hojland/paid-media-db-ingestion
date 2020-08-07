@@ -17,6 +17,7 @@ push_image:
 
 
 start_dev:
+	@-PWD=$(shell pwd)
 	@-docker stop paid-media-db-ingestion_dev > /dev/null 2>&1 ||:
 	@-docker container prune --force > /dev/null
 
@@ -29,7 +30,7 @@ start_dev:
 		--env-file .env \
 		--name paid-media-db-ingestion_dev \
 		--cpus=1 \
-		-v src:/app/ \
+		-v $(PWD)/src/:/app/src/ \
 		-d \
 		paid-media-db-ingestion_dev:latest > /dev/null
 
