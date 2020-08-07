@@ -179,7 +179,7 @@ async def get_365_days_conversion_report(cm_client, profile_id):
 
     from_date, to_date = from_date_to_date(365-60*6, 5)
     last_five_report_asyc_gen = await create_run_and_stream_report(cm_client, profile_id, define_conversion_report(from_date, to_date))
-    report_async_gens.append(report_asyc_gen)
+    report_async_gens.append(last_five_report_asyc_gen)
     reports = await asyncio.gather(*(report for report in report_async_gens))
     return reports
 
