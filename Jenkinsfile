@@ -37,7 +37,6 @@ pipeline {
                                 -e 'GOOGLE_API_KEY=${GOOGLE_API_KEY}' -e 'GOOGLE_ADS_LOGIN_CUSTOMER_ID=${GOOGLE_ADS_LOGIN_CUSTOMER_ID}' \
                                 -e 'GOOGLE_ADS_DEVELOPER_TOKEN=${GOOGLE_ADS_DEVELOPER_TOKEN}' -e 'GOOGLE_ADS_CLIENT_ID=${GOOGLE_ADS_CLIENT_ID}' \
                                 -e 'GOOGLE_ADS_CLIENT_SECRET=${GOOGLE_ADS_CLIENT_SECRET}' -e 'GOOGLE_ADS_REFRESH_TOKEN=${GOOGLE_ADS_REFRESH_TOKEN}' \
-                                -e 'GOOGLE_CM_API_USER_ID=${GOOGLE_CM_API_USER_ID}' -e 'GOOGLE_ADS_PATH_TO_PRIVATE_KEY_FILE=${GOOGLE_ADS_PATH_TO_PRIVATE_KEY_FILE}' \
                                 -e 'GOOGLE_ADS_DELEGATED_ACCOUNT=${GOOGLE_ADS_DELEGATED_ACCOUNT}' \
                                 '${JOB_NAME}':'${BUILD_ID}'"
                         }
