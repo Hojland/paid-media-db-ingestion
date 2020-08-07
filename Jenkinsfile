@@ -27,7 +27,7 @@ pipeline {
                         string(credentialsId: "GOOGLE_ADS_CLIENT_ID", variable: 'GOOGLE_ADS_CLIENT_ID'),
                         string(credentialsId: "GOOGLE_ADS_CLIENT_SECRET", variable: 'GOOGLE_ADS_CLIENT_SECRET'),
                         string(credentialsId: "GOOGLE_ADS_REFRESH_TOKEN", variable: 'GOOGLE_ADS_REFRESH_TOKEN'),
-                        string(credentialsId: "GOOGLE_CM_API_USER_ID", variable: "GOOGLE_CM_API_USER_ID")
+                        string(credentialsId: "GOOGLE_CM_API_USER_ID", variable: "GOOGLE_CM_API_USER_ID"),
                     ]) {
                             sh "docker run -t --rm -e 'MARIADB_USR=${MARIADB_USR}' -e 'MARIADB_PSW=${MARIADB_PSW}' \
                                 -e 'GOOGLE_API_KEY=${GOOGLE_API_KEY}' -e 'GOOGLE_ADS_LOGIN_CUSTOMER_ID=${GOOGLE_ADS_LOGIN_CUSTOMER_ID}' \
