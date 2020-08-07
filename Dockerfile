@@ -10,7 +10,7 @@ ENV GOOGLE_ADS_PATH_TO_PRIVATE_KEY_FILE=/app/credentials/paid-media-db-ingestion
 
 ENV GOOGLE_ADS_DELEGATED_ACCOUNT=nuuday-paid@paid-media-db-ingestion.iam.gserviceaccount.com
 
-ENV GOOGLE_CM_API_USER_ID=
+ENV GOOGLE_CM_API_USER_ID=6002761
 
 COPY src/ /app/src/
 
