@@ -256,8 +256,8 @@ def main():
         report = define_campaign_report(from_date, to_date)
         campaign_df = asyncio.run(create_run_and_stream_report(cm_client, profile_id, report))
         campaign_df = campaign_df.rename({'Date': 'date', 'Campaign': 'campaign',
-                                          'DBM Cost (Account Currency)': 'dbm cost', 'Clicks': 'clicks', 'Impressions': 'impressions',
-                                          'Advertiser': 'advertiser'}, axis=1)
+                                          'DBM Cost (Account Currency)': 'dbm_cost', 'Clicks': 'clicks', 'Impressions': 'impressions',
+                                          'Advertiser': 'advertiser', 'Media Cost': 'media_cost'}, axis=1)
         campaign_df['campaign_name'], campaign_df['brand'], \
             campaign_df['product'], campaign_df['campaign'] = get_brand_product_campaign_name(campaign_df['campaign'])
 
