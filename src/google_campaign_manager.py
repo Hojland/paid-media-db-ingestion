@@ -25,11 +25,8 @@ API_VERSION = 'v3.3'
 API_SCOPES = ['https://www.googleapis.com/auth/dfareporting',
               'https://www.googleapis.com/auth/dfatrafficking',
               'https://www.googleapis.com/auth/ddmconversions']
-LAG_TIME = 7 # Lag time of the upload of conversions in days
+LAG_TIME = 365 # Lag time of the upload of conversions in days
 
-
-# Filename used for the credential store.
-CREDENTIAL_STORE_FILE = API_NAME + '.dat'
 
 def delegated_access_service_account():
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
@@ -90,7 +87,7 @@ def define_conversion_report(from_date, to_date):
             'endDate': to_date
         },
         'dimensions': [
-            {'name': 'dfa:date'}, {'name': 'dfa:campaign'}, {'name': 'dfa:activity'}, #{'name': 'dfa:creative'}
+            {'name': 'dfa:date'}, {'name': 'dfa:campaign'}, {'name': 'dfa:activity'}, {'name': 'dfa:advertiser'}
             ],
         'metricNames': ['dfa:totalConversions', 'dfa:totalConversionsRevenue',
                         'dfa:activityClickThroughConversions', 'dfa:activityViewThroughConversions']
@@ -107,6 +104,12 @@ def define_conversion_report(from_date, to_date):
         'dimensionName': 'dfa:advertiser',
         'value': 'YOUSEE_DISPLAY',
         'id': '8526768',
+    },  {
+        'kind': 'dfareporting#dimensionValue',
+        'etag': '"5I7yjfTWFJCejGwtjMqsgc9kh6I"',
+        'dimensionName': 'dfa:advertiser',
+        'value': 'YOUSEE_AFFILIATE',
+        'id': '8513510'
     }]
     return report
 
@@ -117,10 +120,10 @@ def define_campaign_report(from_date, to_date):
 
     report = {
         # Set the required fields "name" and "type".
-        'name': 'conversion_report',
+        'name': 'campaign_report',
         'type': 'STANDARD',
         # Set optional fields.
-        'fileName': 'conversion_report',
+        'fileName': 'campaign_report',
         'format': 'CSV'
     }
 
@@ -131,9 +134,9 @@ def define_campaign_report(from_date, to_date):
             'endDate': to_date
         },
         'dimensions': [
-            {'name': 'dfa:date'}, {'name': 'dfa:campaign'}, {'name': 'dfa:creative'}
+            {'name': 'dfa:date'}, {'name': 'dfa:campaign'}, {'name': 'dfa:advertiser'}
             ],
-        'metricNames': ['dfa:dbmCost', 'dfa:clicks', 'dfa:impressions']
+        'metricNames': ['dfa:dbmCost', 'dfa:mediaCost', 'dfa:clicks', 'dfa:impressions']
     }
 
     # Add the criteria to the report resource.
@@ -147,6 +150,12 @@ def define_campaign_report(from_date, to_date):
         'dimensionName': 'dfa:advertiser',
         'value': 'YOUSEE_DISPLAY',
         'id': '8526768',
+    },  {
+        'kind': 'dfareporting#dimensionValue',
+        'etag': '"5I7yjfTWFJCejGwtjMqsgc9kh6I"',
+        'dimensionName': 'dfa:advertiser',
+        'value': 'YOUSEE_AFFILIATE',
+        'id': '8513510'
     }]
     return report
 
@@ -161,7 +170,7 @@ async def create_run_and_stream_report(cm_client: client, profile_id: str, repor
     # stream report
     file_id = file['id']
     report_stream = google_campaign_manager_utils.stream_report(cm_client, report_id, file_id)
-    df = pd.read_table(report_stream, sep=',', index_col=False, error_bad_lines=False, encoding='utf-8', skiprows=12)
+    df = pd.read_table(report_stream, sep=',', index_col=False, error_bad_lines=False, encoding='utf-8', skiprows=13)
     return df[:-1]
 
 def from_date_to_date(days_since_start, plus_days):
@@ -183,6 +192,7 @@ async def get_365_days_conversion_report(cm_client, profile_id):
     return reports
 
 def get_brand_product_campaign_name(campaign: pd.Series):
+    campaign = fix_backslash(campaign)
     campaign = campaign.str.replace('(\s|~)\{.*\}', '')
     col_split = campaign.str.split('_|~', n=2, expand=True)
     name = campaign
@@ -190,6 +200,10 @@ def get_brand_product_campaign_name(campaign: pd.Series):
     product = col_split[1]
     campaign = col_split[2]
     return name, brand, product, campaign
+
+def fix_backslash(campaign: pd.Series):
+    campaign = campaign.str.replace('\\', ' ')
+    return campaign
 
 def main():
     credentials = delegated_access_service_account()
@@ -216,10 +230,10 @@ def main():
         conversion_df = asyncio.run(create_run_and_stream_report(cm_client, profile_id, report))
         conversion_df = conversion_df.rename({'Date': 'date', 'Campaign': 'campaign', 'Activity': 'activity', #'Creative': 'creative',
                                                'Total Conversions': 'conversions', 'Total Revenue': 'conversions_value',
-                                               'Click-through Conversions': 'ctc', 'View-through Conversions': 'vtc'}, axis=1)
+                                               'Click-through Conversions': 'ctc', 'View-through Conversions': 'vtc', 'Advertiser': 'advertiser'}, axis=1)
         conversion_df['campaign_name'], conversion_df['brand'], \
             conversion_df['product'], conversion_df['campaign'] = get_brand_product_campaign_name(conversion_df['campaign'])
-
+        conversion_df['conversions_value'] = conversion_df['conversions_value'] / 1000
         dtype_trans = sql.get_dtype_trans(conversion_df)
         dtype_trans.update({'campaign_name': String(100), 'campaign': String(100)})
         dtype_trans.update({'activity': String(100)})
@@ -233,7 +247,7 @@ def main():
         conversion_df.to_sql('google_cm_conversion_report', con=mariadb_engine, dtype=dtype_trans, if_exists='append', index=False)
 
         #mariadb_engine.execute('CREATE INDEX google_cm_conversion_report_date_IDX USING BTREE ON `output`.google_cm_conversion_report (date);')
-        #mariadb_engine.execute('CREATE INDEX google_cm_conversion_report_dim_IDX USING HASH ON `output`.google_cm_conversion_report (brand, product, campaign_name, activity);') #creative
+        #mariadb_engine.execute('CREATE INDEX google_cm_conversion_report_dim_IDX USING HASH ON `output`.google_cm_conversion_report (brand, product, campaign_name, activity, advertiser);') #creative
 
         # get campaign report
         latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_cm_campaign_report')
@@ -241,8 +255,9 @@ def main():
         to_date = datetime.today().strftime('%Y-%m-%d')
         report = define_campaign_report(from_date, to_date)
         campaign_df = asyncio.run(create_run_and_stream_report(cm_client, profile_id, report))
-        campaign_df = campaign_df.rename({'Date': 'date', 'Campaign': 'campaign', 'Creative': 'creative',
-                                               'DBM Cost (Account Currency)': 'cost', 'Clicks': 'clicks', 'Impressions': 'impressions'}, axis=1)
+        campaign_df = campaign_df.rename({'Date': 'date', 'Campaign': 'campaign',
+                                          'DBM Cost (Account Currency)': 'dbm cost', 'Clicks': 'clicks', 'Impressions': 'impressions',
+                                          'Advertiser': 'advertiser'}, axis=1)
         campaign_df['campaign_name'], campaign_df['brand'], \
             campaign_df['product'], campaign_df['campaign'] = get_brand_product_campaign_name(campaign_df['campaign'])
 
@@ -252,13 +267,13 @@ def main():
         dtype_trans.update({'date': DateTime()})
 
        # delete entries that may have been updated
-        sql_utils.delete_date_entries_in_table(mariadb_engine, (latest_date-timedelta(days=7)).strftime('%Y-%m-%d'), 'google_cm_campaign_report')
+        sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_campaign_report')
 
         # insert into sql
         campaign_df.to_sql('google_cm_campaign_report', con=mariadb_engine, dtype=dtype_trans, if_exists='append', index=False)
 
         #mariadb_engine.execute('CREATE INDEX google_cm_campaign_report_date_IDX USING BTREE ON `output`.google_cm_campaign_report (date);')
-        #mariadb_engine.execute('CREATE INDEX google_cm_campaign_report_dim_IDX USING HASH ON `output`.google_cm_campaign_report (brand, product, campaign_name, creative);')
+        #mariadb_engine.execute('CREATE INDEX google_cm_campaign_report_dim_IDX USING HASH ON `output`.google_cm_campaign_report (brand, product, campaign_name, advertiser);')
 
 
     except AccessTokenRefreshError:
@@ -270,11 +285,5 @@ if __name__ == '__main__':
     main()
 
 # made from looking at the dimension filter possibilites to find different advertisers neceessary for getting the metrics
-#dimension_filter_pos = google_campaign_manager_utils.add_dimension_filters(cm_client, profile_id, report)
-
-
-# TODO
-# make function to find latest date observed in database - use that as from date. Maybe use date_from date_to format in campaign report as well
-# Use this function to define what to get and what to insert into database
-# Then make dashboard for this new data
-# Then make sure all jenkins jobs runs again
+#dimension_filter_pos = google_campaign_manager_utils.find_dimension_filters(cm_client, profile_id, report)
+#campaign_df.groupby(['campaign'])['cost'].sum()
