@@ -16,8 +16,6 @@ import sql
 from utils import utils, sql_utils
 
 
-LAG_TIME = 7 # Lag time of the upload of conversions in days
-
 def get_nested_attr(obj, attr, *args):
     """Gets the value of a nested attribute from an object.
     Args:
@@ -175,9 +173,13 @@ def get_access_token_installed_app(client_secrets_path, scopes):
 def main():
     client = GoogleAdsClient.load_from_env()
     mariadb_engine = sql_utils.create_engine(settings.MARIADB_CONFIG, db_name='output', db_type='mysql')
-
+    LAG_TIME = settings.LAG_TIME
     # put google_campaign_report to mysql database
-    latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_campaign_report')
+    if sql_utils.table_exists(mariadb_engine, 'google_campaign_report'):
+        latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_campaign_report')
+    else:
+        latest_date = datetime.today()
+        LAG_TIME = 365
     from_date = (latest_date-timedelta(days=LAG_TIME)).strftime('%Y-%m-%d')
     to_date = datetime.today().strftime('%Y-%m-%d')
 
@@ -193,14 +195,19 @@ def main():
     dtype_trans.update({'campaign': String(80)})
     dtype_trans.update({'date': DateTime()})
 
-    sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_conversion_report')
+    if sql_utils.table_exists(mariadb_engine, 'google_campaign_report'):
+        sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_campaign_report')
     google_campaign_report.to_sql('google_campaign_report', con=mariadb_engine, dtype=dtype_trans, if_exists='append', index=False)
 
     #mariadb_engine.execute('CREATE INDEX google_campaign_report_date_IDX USING BTREE ON `output`.google_campaign_report (date);')
     #mariadb_engine.execute('CREATE INDEX google_campaign_report_name_IDX USING HASH ON `output`.google_campaign_report (name, platform, campaign_type, brandorproduct, campaign);')
 
     # put google_device_campaign_report to mysql database
-    latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_device_campaign_report')
+    if sql_utils.table_exists(mariadb_engine, 'google_device_campaign_report'):
+        latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_device_campaign_report')
+    else:
+        latest_date = datetime.today()
+        LAG_TIME = 365
     from_date = (latest_date-timedelta(days=LAG_TIME)).strftime('%Y-%m-%d')
     to_date = datetime.today().strftime('%Y-%m-%d')
 
@@ -216,7 +223,8 @@ def main():
     dtype_trans.update({'campaign': String(80)})
     dtype_trans.update({'date': DateTime()})
 
-    sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_conversion_report')
+    if sql_utils.table_exists(mariadb_engine, 'google_device_campaign_report'):
+        sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_device_campaign_report')
     google_device_campaign_report.to_sql('google_device_campaign_report', con=mariadb_engine, dtype=dtype_trans, if_exists='append', index=False)
 
     #mariadb_engine.execute('CREATE INDEX device_campaign_report_date_IDX USING BTREE ON `output`.google_device_campaign_report (date);')
@@ -224,7 +232,11 @@ def main():
     #mariadb_engine.execute('CREATE INDEX device_campaign_report_device_IDX USING HASH ON `output`.google_device_campaign_report (device);')
 
     # put google_conversion_campaign_report to mysql database
-    latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_conversion_campaign_report')
+    if sql_utils.table_exists(mariadb_engine, 'google_conversion_campaign_report'):
+        latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_conversion_campaign_report')
+    else:
+        latest_date = datetime.today()
+        LAG_TIME = 365
     from_date = (latest_date-timedelta(days=LAG_TIME)).strftime('%Y-%m-%d')
     to_date = datetime.today().strftime('%Y-%m-%d')
 
@@ -242,7 +254,8 @@ def main():
     dtype_trans.update({'date': DateTime()})
     mariadb_engine = sql_utils.create_engine(settings.MARIADB_CONFIG, db_name='output', db_type='mysql')
 
-    sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_conversion_report')
+    if sql_utils.table_exists(mariadb_engine, 'google_cm_conversion_report'):
+        sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_conversion_report')
     google_conversion_campaign_report.to_sql('google_conversion_campaign_report', con=mariadb_engine, dtype=dtype_trans, if_exists='append', index=False)
 
     #mariadb_engine.execute('CREATE INDEX google_conversion_campaign_report_date_IDX USING BTREE ON `output`.google_conversion_campaign_report (date);')

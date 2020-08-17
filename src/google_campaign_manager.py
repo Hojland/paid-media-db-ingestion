@@ -87,7 +87,7 @@ def define_conversion_report(from_date, to_date):
             'endDate': to_date
         },
         'dimensions': [
-            {'name': 'dfa:date'}, {'name': 'dfa:campaign'}, {'name': 'dfa:activity'}, {'name': 'dfa:advertiser'}
+            {'name': 'dfa:date'}, {'name': 'dfa:campaign'}, {'name': 'dfa:activity'}, {'name': 'dfa:advertiser'}, {'name': 'dfa:site'}
             ],
         'metricNames': ['dfa:totalConversions', 'dfa:totalConversionsRevenue',
                         'dfa:activityClickThroughConversions', 'dfa:activityViewThroughConversions']
@@ -134,7 +134,7 @@ def define_campaign_report(from_date, to_date):
             'endDate': to_date
         },
         'dimensions': [
-            {'name': 'dfa:date'}, {'name': 'dfa:campaign'}, {'name': 'dfa:advertiser'}
+            {'name': 'dfa:date'}, {'name': 'dfa:campaign'}, {'name': 'dfa:advertiser'}, {'name': 'dfa:site'}
             ],
         'metricNames': ['dfa:dbmCost', 'dfa:mediaCost', 'dfa:clicks', 'dfa:impressions']
     }
@@ -205,13 +205,37 @@ def fix_backslash(campaign: pd.Series):
     campaign = campaign.str.replace('\\', ' ')
     return campaign
 
+def split_site(site: pd.Series):
+    col_split = site.str.split('-', n=1, expand=True)
+    site = col_split[0]
+    site_media = col_split[1]
+    return site, site_media
+
+def get_programmatic_campaigns(db_engine: sqlalchemy.engine, campaign: pd.Series):
+    buytype = pd.read_sql('''
+    SELECT campaign_name, sum(dbm_cost) as 'dbm_cost', sum(media_cost) as 'media_cost',
+    CASE 
+        WHEN sum(dbm_cost) = 0 AND sum(media_cost) > 0 THEN 'IO'
+        WHEN sum(dbm_cost) > 0 AND sum(media_cost) = 0 THEN 'Programmatic'
+        WHEN sum(dbm_cost) = 0 AND sum(media_cost) = 0 THEN 'Not defined'
+        ELSE 'Mixed IO and Programmatic'
+    END as 'buy_type'
+    FROM `output`.google_cm_campaign_report
+    GROUP  BY campaign_name
+    ''', db_engine)
+    
+    #translate_dct = utils.pd_to_translate_dict(buytype, 'campaign_name', 'buy_type')
+    #buytype_campaign = campaign.replace(translate_dct)
+    buytype_campaign = buytype[['campaign_name', 'buy_type']]
+    return buytype_campaign
+
 def main():
     credentials = delegated_access_service_account()
     http = credentials.authorize(http=httplib2.Http())
     cm_client = discovery.build(API_NAME, API_VERSION, http=http)
 
     profile_id = API_USER_ID
-
+    LAG_TIME = settings.LAG_TIME
     try:
         ### get the first year of conversion report
         #df_list =  asyncio.run(get_365_days_conversion_report(cm_client, profile_id))
@@ -223,25 +247,33 @@ def main():
         mariadb_engine = sql_utils.create_engine(settings.MARIADB_CONFIG, db_name='output', db_type='mysql')
 
         # get conversion report
-        latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_cm_conversion_report')
+        if sql_utils.table_exists(mariadb_engine, 'google_cm_conversion_report'):
+            latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_cm_conversion_report')
+        else:
+            latest_date = datetime.today()
+            LAG_TIME = 365
         from_date = (latest_date-timedelta(days=LAG_TIME)).strftime('%Y-%m-%d')
         to_date = datetime.today().strftime('%Y-%m-%d')
         report = define_conversion_report(from_date, to_date)
         conversion_df = asyncio.run(create_run_and_stream_report(cm_client, profile_id, report))
         conversion_df = conversion_df.rename({'Date': 'date', 'Campaign': 'campaign', 'Activity': 'activity', #'Creative': 'creative',
                                                'Total Conversions': 'conversions', 'Total Revenue': 'conversions_value',
-                                               'Click-through Conversions': 'ctc', 'View-through Conversions': 'vtc', 'Advertiser': 'advertiser'}, axis=1)
+                                               'Click-through Conversions': 'ctc', 'View-through Conversions': 'vtc', 'Advertiser': 'advertiser',
+                                               'Site (DCM)': 'site'}, axis=1)
+        conversion_df['site'], conversion_df['site_media'] = split_site(conversion_df['site'])
         conversion_df['campaign_name'], conversion_df['brand'], \
             conversion_df['product'], conversion_df['campaign'] = get_brand_product_campaign_name(conversion_df['campaign'])
         conversion_df['conversions_value'] = conversion_df['conversions_value'] / 1000
+
         dtype_trans = sql.get_dtype_trans(conversion_df)
-        dtype_trans.update({'campaign_name': String(100), 'campaign': String(100)})
+        dtype_trans.update({'campaign_name': String(100), 'campaign': String(100), 'site': String(100)})
         dtype_trans.update({'activity': String(100)})
         #dtype_trans.update({'creative': String(100)})
         dtype_trans.update({'date': DateTime()})
 
         # delete entries that may have been updated
-        sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_conversion_report')
+        if sql_utils.table_exists(mariadb_engine, 'google_cm_conversion_report'):
+            sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_conversion_report')
 
         # insert into sql
         conversion_df.to_sql('google_cm_conversion_report', con=mariadb_engine, dtype=dtype_trans, if_exists='append', index=False)
@@ -250,7 +282,11 @@ def main():
         #mariadb_engine.execute('CREATE INDEX google_cm_conversion_report_dim_IDX USING HASH ON `output`.google_cm_conversion_report (brand, product, campaign_name, activity, advertiser);') #creative
 
         # get campaign report
-        latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_cm_campaign_report')
+        if sql_utils.table_exists(mariadb_engine, 'google_cm_campaign_report'):
+            latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_cm_campaign_report')
+        else:
+            latest_date = datetime.today()
+            LAG_TIME = 365
         from_date = (latest_date-timedelta(days=LAG_TIME)).strftime('%Y-%m-%d')
         to_date = datetime.today().strftime('%Y-%m-%d')
         report = define_campaign_report(from_date, to_date)
@@ -260,21 +296,25 @@ def main():
                                           'Advertiser': 'advertiser', 'Media Cost': 'media_cost'}, axis=1)
         campaign_df['campaign_name'], campaign_df['brand'], \
             campaign_df['product'], campaign_df['campaign'] = get_brand_product_campaign_name(campaign_df['campaign'])
-
+        campaign_df['site'], campaign_df['site_media'] = split_site(campaign_df['site'])
+        campaign_df['media_spend'] = campaign_df['media_cost'] + campaign_df['dbm_cost']
         dtype_trans = sql.get_dtype_trans(campaign_df)
-        dtype_trans.update({'campaign_name': String(100), 'campaign': String(100)})
+        dtype_trans.update({'campaign_name': String(100), 'campaign': String(100), 'site': String(100)})
         dtype_trans.update({'creative': String(100)})
         dtype_trans.update({'date': DateTime()})
 
-       # delete entries that may have been updated
-        sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_campaign_report')
+        # delete entries that may have been updated
+        if sql_utils.table_exists(mariadb_engine, 'google_cm_campaign_report'):
+            sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_campaign_report')
 
         # insert into sql
         campaign_df.to_sql('google_cm_campaign_report', con=mariadb_engine, dtype=dtype_trans, if_exists='append', index=False)
 
         #mariadb_engine.execute('CREATE INDEX google_cm_campaign_report_date_IDX USING BTREE ON `output`.google_cm_campaign_report (date);')
-        #mariadb_engine.execute('CREATE INDEX google_cm_campaign_report_dim_IDX USING HASH ON `output`.google_cm_campaign_report (brand, product, campaign_name, advertiser);')
-
+        #mariadb_engine.execute('CREATE INDEX google_cm_campaign_report_dim_IDX USING HASH ON `output`.google_cm_campaign_report (brand, product, campaign_name, advertiser, site);')
+        
+        buytype_campaign = get_programmatic_campaigns(mariadb_engine, campaign_df['campaign_name'])
+        buytype_campaign.to_sql('google_cm_programmatic_dim', con=mariadb_engine, if_exists='replace', index=False)
 
     except AccessTokenRefreshError:
         print('The credentials have been revoked or expired, please re-run the '

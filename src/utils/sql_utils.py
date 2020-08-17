@@ -35,6 +35,24 @@ def get_latest_date_in_table(db_engine: sqlalchemy.engine, table_name: str):
         raise IndexError("No data in variable 'date' in table")
     return latest_date
 
-
 def delete_date_entries_in_table(db_engine: sqlalchemy.engine, min_date: str, table_name: str):
     db_engine.execute(f'DELETE FROM output.{table_name} WHERE date>="{min_date}";')
+
+def delete_table(db_engine: sqlalchemy.engine, table: str):
+    db_engine.execute(f'DROP TABLE {table}')
+
+def truncate_table(db_engine: sqlalchemy.engine, table: str):
+    db_engine.execute(f'TRUNCATE TABLE {table}')
+
+def table_exists(db_engine: sqlalchemy.engine, table: str):
+    exists_num = db_engine.execute(f'''
+    SELECT EXISTS (SELECT * 
+        FROM INFORMATION_SCHEMA.TABLES 
+        WHERE TABLE_SCHEMA = 'output' 
+        AND  TABLE_NAME = '{table}')
+    ''').scalar()
+    if exists_num == 0:
+        exists = False
+    elif exists_num == 1:
+        exists = True
+    return exists

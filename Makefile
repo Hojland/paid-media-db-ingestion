@@ -22,7 +22,7 @@ start_dev:
 	@-docker container prune --force > /dev/null
 
 	@-docker build -f dev.Dockerfile . \
-		-t paid-media-db-ingestion_dev:latest
+		--no-cache -t paid-media-db-ingestion_dev:latest
 
 	@-docker run \
 		-p 10000:8888 \
