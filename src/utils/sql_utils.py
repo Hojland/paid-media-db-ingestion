@@ -56,3 +56,22 @@ def table_exists(db_engine: sqlalchemy.engine, table: str):
     elif exists_num == 1:
         exists = True
     return exists
+
+def table_empty(db_engine: sqlalchemy.engine, table: str):
+   empty_num = db_engine.execute(f'''
+      SELECT EXISTS(SELECT 1 FROM output.{table})
+   ''').scalar()
+   if empty_num == 0:
+      empty = False
+   elif empty_num == 1:
+      empty = True
+   return empty
+
+def table_exists_empty(db_engine: sqlalchemy.engine, table: str):
+   empty = table_empty(db_engine, table)
+   exists = table_exists(db_engine, table)
+   if empty and exists:
+      both = True
+   else:
+      both = False
+   return both

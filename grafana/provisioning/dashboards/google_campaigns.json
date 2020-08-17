@@ -15,12 +15,12 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
-  "iteration": 1596790467253,
+  "id": 3,
+  "iteration": 1597653810638,
   "links": [],
   "panels": [
     {
-      "content": "\n<h1><p style=\"text-align: center;\">Google Ads</p></h1>\n\n<hr class=\"rounded\">\n",
+      "content": "\n<h1><p style=\"text-align: center;\">Google Campaign Manager</p></h1>\n\n<hr class=\"rounded\">\n",
       "datasource": null,
       "fieldConfig": {
         "defaults": {
@@ -34,7 +34,7 @@
         "x": 0,
         "y": 0
       },
-      "id": 29,
+      "id": 2,
       "mode": "html",
       "timeFrom": null,
       "timeShift": null,
@@ -44,7 +44,7 @@
     },
     {
       "datasource": "MySQL",
-      "description": "Total cost in DKK",
+      "description": "Total cost i DKK",
       "fieldConfig": {
         "defaults": {
           "custom": {},
@@ -68,10 +68,10 @@
         "x": 3,
         "y": 2
       },
-      "id": 21,
+      "id": 30,
       "options": {
         "colorMode": "value",
-        "graphMode": "none",
+        "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
@@ -88,24 +88,24 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(cost) AS \"cost\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign)\n",
+          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(media_cost + dbm_cost) AS \"media_cost\"\nFROM google_cm_campaign_report AS gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)",
           "refId": "A",
           "select": [
             [
               {
                 "params": [
-                  "clicks"
+                  "HR_Probability"
                 ],
                 "type": "column"
               }
             ]
           ],
-          "table": "google_campaign_report",
-          "timeColumn": "clicks",
-          "timeColumnType": "int",
+          "table": "ml_handset_replacement",
+          "timeColumn": "Updatetime",
+          "timeColumnType": "timestamp",
           "where": [
             {
-              "name": "$__unixEpochFilter",
+              "name": "$__timeFilter",
               "params": [],
               "type": "macro"
             }
@@ -126,7 +126,7 @@
           "custom": {},
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
                 "color": "#6ed0e0",
@@ -144,7 +144,7 @@
         "x": 9,
         "y": 2
       },
-      "id": 25,
+      "id": 28,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -164,24 +164,24 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(conversions_value) AS \"conversions\"\nFROM google_conversion_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign) AND \n  conversion_action_category in($ConversionCategory) AND\n  conversion_action_name in($ConversionAction)",
+          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(conversions_value) AS \"conversions_value\"\nFROM google_cm_conversion_report gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)",
           "refId": "A",
           "select": [
             [
               {
                 "params": [
-                  "clicks"
+                  "HR_Probability"
                 ],
                 "type": "column"
               }
             ]
           ],
-          "table": "google_campaign_report",
-          "timeColumn": "clicks",
-          "timeColumnType": "int",
+          "table": "ml_handset_replacement",
+          "timeColumn": "Updatetime",
+          "timeColumnType": "timestamp",
           "where": [
             {
-              "name": "$__unixEpochFilter",
+              "name": "$__timeFilter",
               "params": [],
               "type": "macro"
             }
@@ -220,7 +220,7 @@
         "x": 15,
         "y": 2
       },
-      "id": 23,
+      "id": 26,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -240,7 +240,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(clicks) AS \"clicks\"\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign)",
+          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(clicks) AS \"clicks\"\nFROM google_cm_campaign_report AS gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)",
           "refId": "A",
           "select": [
             [
@@ -286,7 +286,7 @@
         "x": 6,
         "y": 8
       },
-      "id": 7,
+      "id": 6,
       "mode": "html",
       "timeFrom": null,
       "timeShift": null,
@@ -327,11 +327,11 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
+        "x": 6,
         "y": 10
       },
       "hiddenSeries": false,
-      "id": 28,
+      "id": 4,
       "legend": {
         "avg": false,
         "current": false,
@@ -343,7 +343,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -362,7 +362,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(cost) AS \"cost\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign)\nGROUP BY 1, name\nORDER BY date",
+          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(media_cost + dbm_cost) AS \"media_cost\",\n  gccr.campaign_name\nFROM google_cm_campaign_report as gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)\nGROUP BY time, gccr.campaign_name\nORDER BY time",
           "refId": "A",
           "select": [
             [
@@ -393,7 +393,7 @@
       "title": "Media Spend",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "transformations": [
@@ -404,6 +404,152 @@
             "mode": "reduceRow",
             "reduce": {
               "include": [],
+              "reducer": "sum"
+            }
+          }
+        }
+      ],
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "MySQL",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "super-light-blue",
+                "value": null
+              },
+              {
+                "color": "dark-blue",
+                "value": 60
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "hiddenSeries": false,
+      "id": 32,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pluginVersion": "7.0.0",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date as \"time\",\n  sum(conversions) AS \"conversions\",\n  gccr.campaign_name\nFROM google_cm_conversion_report gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)\nGROUP BY time, gccr.campaign_name\nORDER BY time",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "clicks"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "google_campaign_report",
+          "timeColumn": "clicks",
+          "timeColumnType": "int",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Conversions - Campaign Level",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Total",
+            "mode": "reduceRow",
+            "reduce": {
               "reducer": "sum"
             }
           }
@@ -475,10 +621,10 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 18
       },
       "hiddenSeries": false,
-      "id": 31,
+      "id": 8,
       "legend": {
         "avg": false,
         "current": false,
@@ -490,7 +636,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -509,7 +655,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(conversions_value) AS \"conversions_value\",\n  name\nFROM google_conversion_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign) AND \n  conversion_action_category in($ConversionCategory) AND\n  conversion_action_name in($ConversionAction)\nGROUP BY 1, name\nORDER BY $__timeGroup(date,$__interval)",
+          "rawSql": "SELECT\n  date as \"time\",\n  sum(conversions_value) AS \"conversions_value\",\n  campaign_name\nFROM google_cm_conversion_report\nWHERE\n  $__timeFilter(date) AND\n  brand in($Brand) AND \n  product in($Product) AND \n  campaign_name in($Campaign) AND \n  activity in ($Activity)\nGROUP BY time, campaign_name\nORDER BY time",
           "refId": "A",
           "select": [
             [
@@ -540,7 +686,7 @@
       "title": "Conversion Value - Campaign Level",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "transformations": [
@@ -621,10 +767,10 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 26
       },
       "hiddenSeries": false,
-      "id": 38,
+      "id": 10,
       "legend": {
         "avg": false,
         "current": false,
@@ -636,7 +782,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -655,7 +801,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "WITH conversions as (\n  SELECT\n    date, name, sum(conversions) as \"conversions\"\n  FROM google_conversion_campaign_report\n  WHERE \n    platform in($Platform) AND \n    campaign_type in($Type) AND \n    brandorproduct in($BrandProduct) AND\n    campaign in($Campaign) AND\n    conversion_action_category in($ConversionCategory) AND\n    conversion_action_name in($ConversionAction)\n  GROUP BY name, date),\ncost AS (\n  SELECT name, date, sum(cost) as \"cost\"\n  FROM google_campaign_report\n  WHERE \n    $__timeFilter(date) AND\n    platform in($Platform) AND \n    campaign_type in($Type) AND \n    brandorproduct in($BrandProduct) AND\n    campaign in($Campaign)\n    GROUP BY name, date)\nSELECT \n  $__timeGroupAlias(conversions.date,$__interval),\n  conversions / cost AS \"cpa\",\n  conversions.name\nFROM conversions LEFT JOIN cost \nON conversions.name = cost.name AND conversions.date = cost.date\nWHERE\n  $__timeFilter(conversions.date)\nGROUP BY 1, name",
+          "rawSql": "WITH conversions as (\n  SELECT\n    date, campaign_name, sum(conversions) as \"conversions\"\n  FROM google_cm_conversion_report\n  WHERE \n    brand in($Brand) AND \n    product in($Product) AND \n    campaign_name in($Campaign) AND \n    activity in ($Activity)\n  GROUP BY campaign_name, date),\ncost AS (\n  SELECT campaign_name, date, sum(media_cost) as \"media_cost\"\n  FROM google_cm_campaign_report\n  WHERE \n    $__timeFilter(date) AND\n    brand in($Brand) AND \n    product in($Product) AND \n    campaign_name in($Campaign) AND \n    advertiser in($Advertiser)\n    GROUP BY campaign_name, date)\nSELECT \n  $__timeGroupAlias(conversions.date,$__interval),\n  conversions / media_cost AS \"cpa\",\n  conversions.campaign_name\nFROM conversions LEFT JOIN cost \nON conversions.campaign_name = cost.campaign_name AND conversions.date = cost.date\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON conversions.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(conversions.date) AND\n  buy_type in($Programmatic)\nGROUP BY time, campaign_name",
           "refId": "B",
           "select": [
             [
@@ -686,7 +832,7 @@
       "title": "CPA",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "transformations": [
@@ -767,10 +913,10 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 18
+        "y": 26
       },
       "hiddenSeries": false,
-      "id": 39,
+      "id": 12,
       "legend": {
         "avg": false,
         "current": false,
@@ -782,7 +928,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -801,7 +947,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "WITH conversions as (\n  SELECT\n    date, name, sum(conversions_value) as \"conversions_value\"\n  FROM google_conversion_campaign_report\n  WHERE \n    platform in($Platform) AND \n    campaign_type in($Type) AND \n    brandorproduct in($BrandProduct) AND\n    campaign in($Campaign) AND\n    conversion_action_category in($ConversionCategory) AND\n    conversion_action_name in($ConversionAction)\n  GROUP BY name, date),\ncost AS (\n  SELECT name, date, sum(cost) as \"cost\"\n  FROM google_campaign_report\n  WHERE \n    $__timeFilter(date) AND\n    platform in($Platform) AND \n    campaign_type in($Type) AND \n    brandorproduct in($BrandProduct) AND\n    campaign in($Campaign)\n    GROUP BY name, date)\nSELECT \n  $__timeGroupAlias(conversions.date,$__interval),\n  conversions_value / cost AS \"roas\",\n  conversions.name\nFROM conversions LEFT JOIN cost \nON conversions.name = cost.name AND conversions.date = cost.date\nWHERE\n  $__timeFilter(conversions.date)\nGROUP BY 1, name",
+          "rawSql": "WITH conversions as (\n  SELECT\n    date, campaign_name, sum(conversions_value) as \"conversions_value\"\n  FROM google_cm_conversion_report\n  WHERE \n    brand in($Brand) AND \n    product in($Product) AND \n    campaign_name in($Campaign) AND \n    activity in ($Activity)\n  GROUP BY campaign_name, date),\ncost AS (\n  SELECT campaign_name, date, sum(media_cost) as \"media_cost\"\n  FROM google_cm_campaign_report\n  WHERE \n    $__timeFilter(date) AND\n    brand in($Brand) AND \n    product in($Product) AND \n    campaign_name in($Campaign) \n    GROUP BY campaign_name, date)\nSELECT \n  $__timeGroupAlias(conversions.date,$__interval),\n  conversions_value / media_cost AS \"roas\",\n  conversions.campaign_name\nFROM conversions LEFT JOIN cost \nON conversions.campaign_name = cost.campaign_name AND conversions.date = cost.date\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON conversions.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(conversions.date) AND\n  buy_type in($Programmatic)\nGROUP BY time, campaign_name",
           "refId": "A",
           "select": [
             [
@@ -832,7 +978,7 @@
       "title": "ROAS",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "transformations": [
@@ -913,10 +1059,10 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 34
       },
       "hiddenSeries": false,
-      "id": 33,
+      "id": 14,
       "legend": {
         "avg": false,
         "current": false,
@@ -928,7 +1074,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -947,7 +1093,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(clicks) AS \"clicks\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign) \nGROUP BY 1, name\nORDER BY date",
+          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(clicks) AS \"clicks\",\n  gccr.campaign_name\nFROM google_cm_campaign_report gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)\nGROUP BY time, gccr.campaign_name\nORDER BY time",
           "refId": "A",
           "select": [
             [
@@ -978,7 +1124,7 @@
       "title": "Clicks",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "transformations": [
@@ -1059,10 +1205,10 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 26
+        "y": 34
       },
       "hiddenSeries": false,
-      "id": 32,
+      "id": 16,
       "legend": {
         "avg": false,
         "current": false,
@@ -1074,7 +1220,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -1093,7 +1239,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(Impressions) AS \"Impressions\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign)\nGROUP BY 1, name\nORDER BY date",
+          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(impressions) AS \"impressions\",\n  gccr.campaign_name\nFROM google_cm_campaign_report gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)\nGROUP BY time, gccr.campaign_name\nORDER BY time",
           "refId": "A",
           "select": [
             [
@@ -1124,7 +1270,7 @@
       "title": "Impressions",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "transformations": [
@@ -1135,152 +1281,6 @@
             "mode": "reduceRow",
             "reduce": {
               "reducer": "sum"
-            }
-          }
-        }
-      ],
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "MySQL",
-      "description": "A ratio showing how often people who see your ad end up clicking it. Clickthrough rate (CTR) can be used to gauge how well your keywords and ads are performing.\n",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "super-light-blue",
-                "value": null
-              },
-              {
-                "color": "dark-blue",
-                "value": 60
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 6,
-        "y": 34
-      },
-      "hiddenSeries": false,
-      "id": 30,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pluginVersion": "7.0.0",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  avg(ctr) AS \"ctr\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign)\nGROUP BY 1, name\nORDER BY date",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "clicks"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "google_campaign_report",
-          "timeColumn": "clicks",
-          "timeColumnType": "int",
-          "where": [
-            {
-              "name": "$__unixEpochFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "CTR",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transformations": [
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Mean",
-            "mode": "reduceRow",
-            "reduce": {
-              "reducer": "mean"
             }
           }
         }
@@ -1332,7 +1332,7 @@
         "x": 6,
         "y": 42
       },
-      "id": 6,
+      "id": 20,
       "mode": "html",
       "timeFrom": null,
       "timeShift": null,
@@ -1362,7 +1362,7 @@
         "y": 44
       },
       "hiddenSeries": false,
-      "id": 9,
+      "id": 22,
       "legend": {
         "avg": false,
         "current": false,
@@ -1374,7 +1374,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -1392,7 +1392,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  conversions as \"conversions\",\n  conversion_action_name\nFROM google_conversion_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign) AND \n  conversion_action_category in($ConversionCategory) AND \n  conversion_action_name in($ConversionAction)\nGROUP BY 1, conversion_action_name\nORDER BY date",
+          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  conversions as \"conversions\",\n  activity\nFROM google_cm_conversion_report gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)\nGROUP BY time, activity\nORDER BY time",
           "refId": "A",
           "select": [
             [
@@ -1423,7 +1423,7 @@
       "title": "Conversion Goals",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "transformations": [
@@ -1492,7 +1492,7 @@
         "y": 44
       },
       "hiddenSeries": false,
-      "id": 11,
+      "id": 24,
       "legend": {
         "avg": false,
         "current": false,
@@ -1504,7 +1504,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -1522,7 +1522,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  conversions_value as \"conversions_value\",\n  conversion_action_name\nFROM google_conversion_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign) AND \n  conversion_action_category in($ConversionCategory) AND \n  conversion_action_name in($ConversionAction)\nGROUP BY 1, conversion_action_name\nORDER BY date",
+          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  conversions_value as \"conversions_value\",\n  activity\nFROM google_cm_conversion_report gccr\nLEFT JOIN google_cm_programmatic_dim AS gcpd\nON gccr.`campaign_name` = gcpd.`campaign_name`\nWHERE\n  $__timeFilter(date) AND\n  brand in(Brand) AND \n  product in(Product) AND \n  gccr.campaign_name in($Campaign) AND \n  advertiser in($Advertiser) AND\n  buy_type in($Programmatic)\nGROUP BY time, activity\nORDER BY time DESC",
           "refId": "A",
           "select": [
             [
@@ -1553,7 +1553,7 @@
       "title": "Conversion Value",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "transformations": [
@@ -1599,256 +1599,15 @@
         "align": false,
         "alignLevel": null
       }
-    },
-    {
-      "datasource": "MySQL",
-      "description": "The number of clicks",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "super-light-blue",
-                "value": null
-              },
-              {
-                "color": "dark-blue",
-                "value": 60
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 6,
-        "y": 53
-      },
-      "id": 35,
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "limit": 5,
-          "values": true
-        },
-        "showUnfilled": false
-      },
-      "pluginVersion": "7.0.0",
-      "targets": [
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(clicks) AS \"clicks\",\n  device\nFROM google_device_campaign_report\nWHERE\n  $__timeFilter(date) AND\n  platform in($Platform) AND \n  campaign_type in($Type) AND \n  brandorproduct in($BrandProduct) AND\n  campaign in($Campaign)\nGROUP BY device\nORDER BY clicks DESC;",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "clicks"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "google_campaign_report",
-          "timeColumn": "clicks",
-          "timeColumnType": "int",
-          "where": [
-            {
-              "name": "$__unixEpochFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Clicks per device type",
-      "transparent": true,
-      "type": "bargauge"
-    },
-    {
-      "datasource": "MySQL",
-      "description": "Cost in DKK",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "super-light-blue",
-                "value": null
-              },
-              {
-                "color": "dark-blue",
-                "value": 60
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 61
-      },
-      "id": 19,
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "limit": 5,
-          "values": true
-        },
-        "showUnfilled": false
-      },
-      "pluginVersion": "7.0.0",
-      "targets": [
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(cost) AS \"cost\",\n  name\nFROM google_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY name\nORDER BY cost DESC;",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "clicks"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "google_campaign_report",
-          "timeColumn": "clicks",
-          "timeColumnType": "int",
-          "where": [
-            {
-              "name": "$__unixEpochFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Media spend on campaigns",
-      "transparent": true,
-      "type": "bargauge"
-    },
-    {
-      "datasource": "MySQL",
-      "description": "Conversion value of all types of conversions",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "super-light-blue",
-                "value": null
-              },
-              {
-                "color": "dark-blue",
-                "value": 60
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 61
-      },
-      "id": 36,
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "limit": 5,
-          "values": true
-        },
-        "showUnfilled": false
-      },
-      "pluginVersion": "7.0.0",
-      "targets": [
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(date,$__interval),\n  sum(conversions_value) AS \"conversions_value\",\n  name\nFROM google_conversion_campaign_report\nWHERE\n  $__timeFilter(date)\nGROUP BY name\nORDER BY conversions_value DESC;",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "clicks"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "google_campaign_report",
-          "timeColumn": "clicks",
-          "timeColumnType": "int",
-          "where": [
-            {
-              "name": "$__unixEpochFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Conversion value on campaigns",
-      "transparent": true,
-      "type": "bargauge"
     }
   ],
-  "refresh": false,
   "schemaVersion": 25,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
-        "allValue": "",
+        "allValue": null,
         "current": {
           "selected": true,
           "text": "All",
@@ -1857,15 +1616,31 @@
           ]
         },
         "datasource": "MySQL",
-        "definition": "SELECT DISTINCT platform FROM output.google_campaign_report",
+        "definition": "SELECT DISTINCT advertiser FROM output.google_cm_campaign_report",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
-        "name": "Platform",
-        "options": [],
-        "query": "SELECT DISTINCT platform FROM output.google_campaign_report",
-        "refresh": 1,
+        "name": "Advertiser",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "YOUSEE_DISPLAY",
+            "value": "YOUSEE_DISPLAY"
+          },
+          {
+            "selected": false,
+            "text": "YOUSEE_AFFILIATE",
+            "value": "YOUSEE_AFFILIATE"
+          }
+        ],
+        "query": "SELECT DISTINCT advertiser FROM output.google_cm_campaign_report",
+        "refresh": 0,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -1876,7 +1651,7 @@
         "useTags": false
       },
       {
-        "allValue": "",
+        "allValue": null,
         "current": {
           "selected": true,
           "text": "All",
@@ -1885,15 +1660,41 @@
           ]
         },
         "datasource": "MySQL",
-        "definition": "SELECT DISTINCT campaign_type FROM output.google_campaign_report WHERE platform in($Platform) ",
+        "definition": "SELECT DISTINCT buy_type FROM output.google_cm_programmatic_dim",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
-        "name": "Type",
-        "options": [],
-        "query": "SELECT DISTINCT campaign_type FROM output.google_campaign_report WHERE platform in($Platform) ",
-        "refresh": 1,
+        "name": "Programmatic",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "Programmatic",
+            "value": "Programmatic"
+          },
+          {
+            "selected": false,
+            "text": "Not defined",
+            "value": "Not defined"
+          },
+          {
+            "selected": false,
+            "text": "Mixed IO and Programmatic",
+            "value": "Mixed IO and Programmatic"
+          },
+          {
+            "selected": false,
+            "text": "IO",
+            "value": "IO"
+          }
+        ],
+        "query": "SELECT DISTINCT buy_type FROM output.google_cm_programmatic_dim",
+        "refresh": 0,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -1904,7 +1705,7 @@
         "useTags": false
       },
       {
-        "allValue": "",
+        "allValue": null,
         "current": {
           "selected": true,
           "text": "All",
@@ -1913,15 +1714,36 @@
           ]
         },
         "datasource": "MySQL",
-        "definition": "SELECT DISTINCT brandorproduct FROM output.google_campaign_report WHERE platform in($Platform) AND campaign_type in($Type)",
+        "definition": "SELECT DISTINCT brand FROM output.google_cm_campaign_report WHERE advertiser in($Advertiser)",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
-        "name": "BrandProduct",
-        "options": [],
-        "query": "SELECT DISTINCT brandorproduct FROM output.google_campaign_report WHERE platform in($Platform) AND campaign_type in($Type)",
-        "refresh": 1,
+        "name": "Brand",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)",
+            "value": "TDC A/S (YouSee)"
+          },
+          {
+            "selected": false,
+            "text": "Testkampagne",
+            "value": "Testkampagne"
+          },
+          {
+            "selected": false,
+            "text": "Yousee",
+            "value": "Yousee"
+          }
+        ],
+        "query": "SELECT DISTINCT brand FROM output.google_cm_campaign_report WHERE advertiser in($Advertiser)",
+        "refresh": 0,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -1932,7 +1754,7 @@
         "useTags": false
       },
       {
-        "allValue": "",
+        "allValue": null,
         "current": {
           "selected": true,
           "text": "All",
@@ -1941,15 +1763,410 @@
           ]
         },
         "datasource": "MySQL",
-        "definition": "SELECT DISTINCT campaign FROM output.google_campaign_report WHERE platform in($Platform) AND campaign_type in($Type) AND brandorproduct in($BrandProduct)",
+        "definition": "SELECT DISTINCT product FROM output.google_cm_campaign_report WHERE advertiser in($Advertiser) AND brand in($Brand) ",
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "Product",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "BB",
+            "value": "BB"
+          },
+          {
+            "selected": false,
+            "text": "Image",
+            "value": "Image"
+          },
+          {
+            "selected": false,
+            "text": "Mixed",
+            "value": "Mixed"
+          },
+          {
+            "selected": false,
+            "text": "MV",
+            "value": "MV"
+          },
+          {
+            "selected": false,
+            "text": "TV",
+            "value": "TV"
+          },
+          {
+            "selected": false,
+            "text": "Xee",
+            "value": "Xee"
+          },
+          {
+            "selected": false,
+            "text": "",
+            "value": ""
+          },
+          {
+            "selected": false,
+            "text": "Bredbånd",
+            "value": "Bredbånd"
+          },
+          {
+            "selected": false,
+            "text": "Multiple",
+            "value": "Multiple"
+          }
+        ],
+        "query": "SELECT DISTINCT product FROM output.google_cm_campaign_report WHERE advertiser in($Advertiser) AND brand in($Brand) ",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "MySQL",
+        "definition": "SELECT DISTINCT campaign_name FROM output.google_cm_campaign_report WHERE advertiser in ($Advertiser) AND brand in($Brand)  AND product in($Product)",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "Campaign",
-        "options": [],
-        "query": "SELECT DISTINCT campaign FROM output.google_campaign_report WHERE platform in($Platform) AND campaign_type in($Type) AND brandorproduct in($BrandProduct)",
-        "refresh": 1,
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~BB~DK~W2W5 2020~Digital / BB / Kontinuerlig / Jan 2020",
+            "value": "TDC A/S (YouSee)~BB~DK~W2W5 2020~Digital / BB / Kontinuerlig / Jan 2020"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~BB~DK~W45W46 2019~Geo Kampagne Aalborg / Gigaspeed / 2019",
+            "value": "TDC A/S (YouSee)~BB~DK~W45W46 2019~Geo Kampagne Aalborg / Gigaspeed / 2019"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~BB~DK~W45W46 2019~Geo Kampagne Amager / Gigaspeed / 2019",
+            "value": "TDC A/S (YouSee)~BB~DK~W45W46 2019~Geo Kampagne Amager / Gigaspeed / 2019"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~BB~DK~W46W1 2019~Digital / BB / O-kunder / 46-52 2019",
+            "value": "TDC A/S (YouSee)~BB~DK~W46W1 2019~Digital / BB / O-kunder / 46-52 2019"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~BB~DK~W46W1 2019~Digital / Behovstest / Nov19 - Mar20",
+            "value": "TDC A/S (YouSee)~BB~DK~W46W1 2019~Digital / Behovstest / Nov19 - Mar20"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~BB~DK~W47W49 2019~Digital / BB / Gigaspeed Burst 4 / W47-49 2019",
+            "value": "TDC A/S (YouSee)~BB~DK~W47W49 2019~Digital / BB / Gigaspeed Burst 4 / W47-49 2019"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~BB~DK~W47W49 2019~Digital / BB / Gigaspeed Burst 4 TV2 / W47-49 2019",
+            "value": "TDC A/S (YouSee)~BB~DK~W47W49 2019~Digital / BB / Gigaspeed Burst 4 TV2 / W47-49 2019"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~BB~DK~W4W6 2020~Digital / BB / Gigaspeed Burst 5 / W4-6 2020",
+            "value": "TDC A/S (YouSee)~BB~DK~W4W6 2020~Digital / BB / Gigaspeed Burst 5 / W4-6 2020"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~Image~DK~W8W11 2020~Yousee / Image / Brand kampagne / W8-11 2020~",
+            "value": "TDC A/S (YouSee)~Image~DK~W8W11 2020~Yousee / Image / Brand kampagne / W8-11 2020~"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~Mixed~DK~W1W5 2020~Digital / Mixed / Flyt / Jan 2020",
+            "value": "TDC A/S (YouSee)~Mixed~DK~W1W5 2020~Digital / Mixed / Flyt / Jan 2020"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~Mixed~DK~W1W53 2020~Affiliate",
+            "value": "TDC A/S (YouSee)~Mixed~DK~W1W53 2020~Affiliate"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~MV~DK~W1W14 2020~Digital / MV / Kontinuerlig / Mobil samarbejde",
+            "value": "TDC A/S (YouSee)~MV~DK~W1W14 2020~Digital / MV / Kontinuerlig / Mobil samarbejde"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~MV~DK~W1W4 2020~Digital / MV / Samsung A50 / W1-4 2020",
+            "value": "TDC A/S (YouSee)~MV~DK~W1W4 2020~Digital / MV / Samsung A50 / W1-4 2020"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~MV~DK~W1W5 2020~Digital / MV / Kontinuerlig / Jan 2020",
+            "value": "TDC A/S (YouSee)~MV~DK~W1W5 2020~Digital / MV / Kontinuerlig / Jan 2020"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~MV~DK~W49W51 2019~Digital / MV / Huawei  P30 Lite / W49-51 2019",
+            "value": "TDC A/S (YouSee)~MV~DK~W49W51 2019~Digital / MV / Huawei  P30 Lite / W49-51 2019"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~MV~DK~W6W8 2020~Yousee / MV / Huawei P30 Pro / W6-8 2020",
+            "value": "TDC A/S (YouSee)~MV~DK~W6W8 2020~Yousee / MV / Huawei P30 Pro / W6-8 2020"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~TV~DK~W2W4 2020~Digital / TV / TV 2020 Re-Run W2-4 2020",
+            "value": "TDC A/S (YouSee)~TV~DK~W2W4 2020~Digital / TV / TV 2020 Re-Run W2-4 2020"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~TV~DK~W51W1 2019~Digital / YouSee Sportsrettigheder / 19.12-05.01",
+            "value": "TDC A/S (YouSee)~TV~DK~W51W1 2019~Digital / YouSee Sportsrettigheder / 19.12-05.01"
+          },
+          {
+            "selected": false,
+            "text": "TDC A/S (YouSee)~Xee~DK~W52W1 2019~Xee / Dagsejerskaber vol 2 / 25.12.19-01.01.20",
+            "value": "TDC A/S (YouSee)~Xee~DK~W52W1 2019~Xee / Dagsejerskaber vol 2 / 25.12.19-01.01.20"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_BB_ConceptCPH-Takeover_0619",
+            "value": "Yousee_BB_ConceptCPH-Takeover_0619"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_BB_Gigaspeed-Burst-1_0819",
+            "value": "Yousee_BB_Gigaspeed-Burst-1_0819"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_BB_Gigaspeed-Burst-3_1119",
+            "value": "Yousee_BB_Gigaspeed-Burst-3_1119"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_BB_Gigaspeed-Kontinuerlig_0819",
+            "value": "Yousee_BB_Gigaspeed-Kontinuerlig_0819"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~BB~DK~W11W20 2020~Digital / Gigaspeed / Uge 11-20 2020",
+            "value": "YouSee~BB~DK~W11W20 2020~Digital / Gigaspeed / Uge 11-20 2020"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~BB~DK~W21W23 2020~Digital / Gigaspeed / Uge 21-23",
+            "value": "YouSee~BB~DK~W21W23 2020~Digital / Gigaspeed / Uge 21-23"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~BB~DK~W27W40 2020~BB Kontinuerlig Low Funnel Digital / BB Kontinuerlig Low Funnel / 2020",
+            "value": "YouSee~BB~DK~W27W40 2020~BB Kontinuerlig Low Funnel Digital / BB Kontinuerlig Low Funnel / 2020"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~BB~DK~W27W40 2020~Gigaspeed kontinuerlig Digital / Gigaspeed kontinuerlig",
+            "value": "YouSee~BB~DK~W27W40 2020~Gigaspeed kontinuerlig Digital / Gigaspeed kontinuerlig"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~BB~DK~W32W35 2020~BB Regional Fiber Digital / BB Regional Fiber",
+            "value": "YouSee~BB~DK~W32W35 2020~BB Regional Fiber Digital / BB Regional Fiber"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Bredbånd_118_1018",
+            "value": "Yousee_Bredbånd_118_1018"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Bredbånd_Boligsider_0219",
+            "value": "Yousee_Bredbånd_Boligsider_0219"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Bredbånd_Gigaspeed-Burst-2_0919",
+            "value": "Yousee_Bredbånd_Gigaspeed-Burst-2_0919"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Bredbånd_Positionering_1018",
+            "value": "Yousee_Bredbånd_Positionering_1018"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~Image~DK~W18W22 2020~Digital / Brand / Uge 18-22",
+            "value": "YouSee~Image~DK~W18W22 2020~Digital / Brand / Uge 18-22"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Multiple_Affiliate_2018",
+            "value": "YouSee_Multiple_Affiliate_2018"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Multiple_Programmatic_2019",
+            "value": "Yousee_Multiple_Programmatic_2019"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_MV_Huawei-P-Smart-W43-45_1119",
+            "value": "Yousee_MV_Huawei-P-Smart-W43-45_1119"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_MV_Huawei-P30-Lite_0919",
+            "value": "Yousee_MV_Huawei-P30-Lite_0919"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_MV_iPhone-11-Lancering_0919",
+            "value": "Yousee_MV_iPhone-11-Lancering_0919"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_MV_Iphone-Kontinuerlig_0819",
+            "value": "Yousee_MV_Iphone-Kontinuerlig_0819"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_MV_Mobilsamarbejder_1119",
+            "value": "Yousee_MV_Mobilsamarbejder_1119"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_MV_Samsung-A40_0519",
+            "value": "Yousee_MV_Samsung-A40_0519"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_MV_Samsung-S10_0819",
+            "value": "Yousee_MV_Samsung-S10_0819"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_MV_SamsungS10E_A40_1019",
+            "value": "Yousee_MV_SamsungS10E_A40_1019"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~MV~DK~W12W14 2020~Digital / Huawei P30 Lite / Uge 12-14 2020~",
+            "value": "YouSee~MV~DK~W12W14 2020~Digital / Huawei P30 Lite / Uge 12-14 2020~"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~MV~DK~W15W18 2020~Digital / iPhones / Uge 15-18~",
+            "value": "YouSee~MV~DK~W15W18 2020~Digital / iPhones / Uge 15-18~"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~MV~DK~W18W21 2020~Digital / Terminal Fri Data / Uge 18-21",
+            "value": "YouSee~MV~DK~W18W21 2020~Digital / Terminal Fri Data / Uge 18-21"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~MV~DK~W22W24 2020~Digital / Samsung A51 / U22-24~",
+            "value": "YouSee~MV~DK~W22W24 2020~Digital / Samsung A51 / U22-24~"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~MV~DK~W25W27 2020~Digital / iPhone 11 / U25-27",
+            "value": "YouSee~MV~DK~W25W27 2020~Digital / iPhone 11 / U25-27"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~MV~DK~W28W31 2020~Digital / MV iPhone / W28-31 Digital / U28-31",
+            "value": "YouSee~MV~DK~W28W31 2020~Digital / MV iPhone / W28-31 Digital / U28-31"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~MV~DK~W9W10 2020~Digital / Samsung S10 Lite",
+            "value": "YouSee~MV~DK~W9W10 2020~Digital / Samsung S10 Lite"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_TV_Bland-Selv-Re-Run_0719",
+            "value": "Yousee_TV_Bland-Selv-Re-Run_0719"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_TV_Bland-Selv-Re-Run_0919",
+            "value": "Yousee_TV_Bland-Selv-Re-Run_0919"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_TV_Bland-Selv_1119",
+            "value": "Yousee_TV_Bland-Selv_1119"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_TV_Premier-League-Lancering_0719",
+            "value": "Yousee_TV_Premier-League-Lancering_0719"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_TV_Premier-League-W30-36_0719",
+            "value": "Yousee_TV_Premier-League-W30-36_0719"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_TV_Xee-Dagsejerskab_1119",
+            "value": "Yousee_TV_Xee-Dagsejerskab_1119"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~TV~DK~W13W16 2020~Digital / Bland Selv / Uge 13-16~",
+            "value": "YouSee~TV~DK~W13W16 2020~Digital / Bland Selv / Uge 13-16~"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~TV~DK~W15W27 2020~Digital / TV / Kontinuerlig / 2020~",
+            "value": "YouSee~TV~DK~W15W27 2020~Digital / TV / Kontinuerlig / 2020~"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~TV~DK~W20W27 2020~TV Behovstest Kontinuerlig~",
+            "value": "YouSee~TV~DK~W20W27 2020~TV Behovstest Kontinuerlig~"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~TV~DK~W30W33 2020~Bland Selv U30-33 Digital / U30-33",
+            "value": "YouSee~TV~DK~W30W33 2020~Bland Selv U30-33 Digital / U30-33"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~Xee~DK~W15W15 2020~Digital / Limboland / 12.04~",
+            "value": "YouSee~Xee~DK~W15W15 2020~Digital / Limboland / 12.04~"
+          },
+          {
+            "selected": false,
+            "text": "YouSee~Xee~DK~W31W31 2020~Jungle Digital / 02.08.20",
+            "value": "YouSee~Xee~DK~W31W31 2020~Jungle Digital / 02.08.20"
+          }
+        ],
+        "query": "SELECT DISTINCT campaign_name FROM output.google_cm_campaign_report WHERE advertiser in ($Advertiser) AND brand in($Brand)  AND product in($Product)",
+        "refresh": 0,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -1960,52 +2177,278 @@
         "useTags": false
       },
       {
-        "allValue": "",
+        "allValue": null,
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "All",
-          "value": [
-            "$__all"
-          ]
+          "value": "$__all"
         },
         "datasource": "MySQL",
-        "definition": "SELECT DISTINCT conversion_action_category FROM output.google_conversion_campaign_report",
+        "definition": "SELECT DISTINCT activity FROM output.google_cm_conversion_report WHERE advertiser in ($Advertiser) AND brand in($Brand)  AND product in($Product) AND campaign_name in($Campaign)",
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
-        "name": "ConversionCategory",
-        "options": [],
-        "query": "SELECT DISTINCT conversion_action_category FROM output.google_conversion_campaign_report",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      },
-      {
-        "allValue": "",
-        "current": {
-          "selected": true,
-          "text": "All",
-          "value": [
-            "$__all"
-          ]
-        },
-        "datasource": "MySQL",
-        "definition": "SELECT DISTINCT conversion_action_name FROM output.google_conversion_campaign_report WHERE conversion_action_category in($ConversionCategory)",
-        "hide": 0,
-        "includeAll": true,
-        "label": null,
-        "multi": true,
-        "name": "ConversionAction",
-        "options": [],
-        "query": "SELECT DISTINCT conversion_action_name FROM output.google_conversion_campaign_report WHERE conversion_action_category in($ConversionCategory)",
-        "refresh": 1,
+        "name": "Activity",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "Esportligaen_rtg_allpages",
+            "value": "Esportligaen_rtg_allpages"
+          },
+          {
+            "selected": false,
+            "text": "Mobil.nu_Audience",
+            "value": "Mobil.nu_Audience"
+          },
+          {
+            "selected": false,
+            "text": "Mobilsiden_Audience",
+            "value": "Mobilsiden_Audience"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_100-500Mbit+Knap_BB",
+            "value": "Yousee_100-500Mbit+Knap_BB"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_30seconds_BB",
+            "value": "YouSee_30seconds_BB"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_30seconds_More",
+            "value": "YouSee_30seconds_More"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_30seconds_MV",
+            "value": "YouSee_30seconds_MV"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_30seconds_TV",
+            "value": "YouSee_30seconds_TV"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_50-100Mbit+Knap_BB",
+            "value": "Yousee_50-100Mbit+Knap_BB"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_500-1000Mbit+Knap_BB",
+            "value": "Yousee_500-1000Mbit+Knap_BB"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_60seconds_BB",
+            "value": "YouSee_60seconds_BB"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_60seconds_More",
+            "value": "YouSee_60seconds_More"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_60seconds_MV",
+            "value": "YouSee_60seconds_MV"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_60seconds_TV",
+            "value": "YouSee_60seconds_TV"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Allpages",
+            "value": "YouSee_Allpages"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Behovstest1_page hit_mid-funnel_ikke startet test",
+            "value": "Yousee_Behovstest1_page hit_mid-funnel_ikke startet test"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Behovstest2_test startet - ikke afsluttet",
+            "value": "Yousee_Behovstest2_test startet - ikke afsluttet"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Behovstest3_test afsluttet og anbefaling modtaget",
+            "value": "Yousee_Behovstest3_test afsluttet og anbefaling modtaget"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Behovstest3_test afsluttet_BS10",
+            "value": "Yousee_Behovstest3_test afsluttet_BS10"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Behovstest3_test afsluttet_BS20",
+            "value": "Yousee_Behovstest3_test afsluttet_BS20"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Behovstest3_test afsluttet_BS36",
+            "value": "Yousee_Behovstest3_test afsluttet_BS36"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_BrandedSearch",
+            "value": "YouSee_BrandedSearch"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Conversion-All",
+            "value": "YouSee_Conversion-All"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Conversion-BB",
+            "value": "YouSee_Conversion-BB"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Conversion-MV",
+            "value": "YouSee_Conversion-MV"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Conversion-Terminal",
+            "value": "YouSee_Conversion-Terminal"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Conversion-TV",
+            "value": "YouSee_Conversion-TV"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Flyttemelding i MitYouSee",
+            "value": "YouSee_Flyttemelding i MitYouSee"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Internet-Speed-Calculator-Interaction_BB",
+            "value": "Yousee_Internet-Speed-Calculator-Interaction_BB"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Meld-flytning",
+            "value": "Yousee_Meld-flytning"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_RMO-All",
+            "value": "YouSee_RMO-All"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_RMO-BB",
+            "value": "YouSee_RMO-BB"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_RMO-Fiber",
+            "value": "YouSee_RMO-Fiber"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_RMO-MV",
+            "value": "YouSee_RMO-MV"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_RMO-Terminal",
+            "value": "YouSee_RMO-Terminal"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_RMO-TV",
+            "value": "YouSee_RMO-TV"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Semb-Konverteringer",
+            "value": "YouSee_Semb-Konverteringer"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Step1_BB",
+            "value": "Yousee_Step1_BB"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Step1_MV",
+            "value": "Yousee_Step1_MV"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Step1_Terminal",
+            "value": "Yousee_Step1_Terminal"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Step1_TV",
+            "value": "Yousee_Step1_TV"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Users",
+            "value": "YouSee_Users"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Wifi-Booster_1.Påbegyndt test",
+            "value": "Yousee_Wifi-Booster_1.Påbegyndt test"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Wifi-Booster_page hit_mid-funnel_ikke startet test",
+            "value": "Yousee_Wifi-Booster_page hit_mid-funnel_ikke startet test"
+          },
+          {
+            "selected": false,
+            "text": "Boliga_Audience",
+            "value": "Boliga_Audience"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Behovstest3_test afsluttet_Grundpakke",
+            "value": "Yousee_Behovstest3_test afsluttet_Grundpakke"
+          },
+          {
+            "selected": false,
+            "text": "Yousee_Wifi-Booster_test afsluttet og anbefaling modtaget",
+            "value": "Yousee_Wifi-Booster_test afsluttet og anbefaling modtaget"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Gennemført_Test",
+            "value": "YouSee_Gennemført_Test"
+          },
+          {
+            "selected": false,
+            "text": "YouSee_Step1_All",
+            "value": "YouSee_Step1_All"
+          },
+          {
+            "selected": false,
+            "text": "Berlingske_Native-Samarbejde",
+            "value": "Berlingske_Native-Samarbejde"
+          }
+        ],
+        "query": "SELECT DISTINCT activity FROM output.google_cm_conversion_report WHERE advertiser in ($Advertiser) AND brand in($Brand)  AND product in($Product) AND campaign_name in($Campaign)",
+        "refresh": 0,
         "regex": "",
         "skipUrlSync": false,
         "sort": 0,
@@ -2035,7 +2478,7 @@
     ]
   },
   "timezone": "",
-  "title": "Google Campaigns",
-  "uid": "EF86BunMk",
-  "version": 23
+  "title": "Google Campaign Manager",
+  "uid": "SMxJVGIMk",
+  "version": 19
 }

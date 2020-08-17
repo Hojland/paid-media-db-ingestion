@@ -175,7 +175,7 @@ def main():
     mariadb_engine = sql_utils.create_engine(settings.MARIADB_CONFIG, db_name='output', db_type='mysql')
     LAG_TIME = settings.LAG_TIME
     # put google_campaign_report to mysql database
-    if sql_utils.table_exists(mariadb_engine, 'google_campaign_report'):
+    if sql_utils.table_exists_empty(mariadb_engine, 'google_campaign_report'):
         latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_campaign_report')
     else:
         latest_date = datetime.today()
@@ -203,7 +203,7 @@ def main():
     #mariadb_engine.execute('CREATE INDEX google_campaign_report_name_IDX USING HASH ON `output`.google_campaign_report (name, platform, campaign_type, brandorproduct, campaign);')
 
     # put google_device_campaign_report to mysql database
-    if sql_utils.table_exists(mariadb_engine, 'google_device_campaign_report'):
+    if sql_utils.table_exists_empty(mariadb_engine, 'google_device_campaign_report'):
         latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_device_campaign_report')
     else:
         latest_date = datetime.today()
@@ -232,7 +232,7 @@ def main():
     #mariadb_engine.execute('CREATE INDEX device_campaign_report_device_IDX USING HASH ON `output`.google_device_campaign_report (device);')
 
     # put google_conversion_campaign_report to mysql database
-    if sql_utils.table_exists(mariadb_engine, 'google_conversion_campaign_report'):
+    if sql_utils.table_exists_empty(mariadb_engine, 'google_conversion_campaign_report'):
         latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_conversion_campaign_report')
     else:
         latest_date = datetime.today()
