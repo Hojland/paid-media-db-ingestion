@@ -293,7 +293,7 @@ def main():
         campaign_df = asyncio.run(create_run_and_stream_report(cm_client, profile_id, report))
         campaign_df = campaign_df.rename({'Date': 'date', 'Campaign': 'campaign',
                                           'DBM Cost (Account Currency)': 'dbm_cost', 'Clicks': 'clicks', 'Impressions': 'impressions',
-                                          'Advertiser': 'advertiser', 'Media Cost': 'media_cost'}, axis=1)
+                                          'Advertiser': 'advertiser', 'Media Cost': 'media_cost', 'Site (DCM)': 'site'}, axis=1)
         campaign_df['campaign_name'], campaign_df['brand'], \
             campaign_df['product'], campaign_df['campaign'] = get_brand_product_campaign_name(campaign_df['campaign'])
         campaign_df['site'], campaign_df['site_media'] = split_site(campaign_df['site'])
