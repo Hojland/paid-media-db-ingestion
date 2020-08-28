@@ -14,6 +14,7 @@ from google.ads.google_ads.v4.proto import enums
 import settings
 import sql
 from utils import utils, sql_utils
+from user_list_service_client import UserListServiceClient
 
 
 def get_nested_attr(obj, attr, *args):
@@ -149,7 +150,7 @@ def get_campaign_report(client: GoogleAdsClient, customer_id: str, time_period_q
 
 def get_platform_type_brandorproduct_campaign_from_naming(name: pd.Series):
     col_split = name.str.split(' - ', n=3, expand=True)
-    col_split.loc[col_split[2].str.contains('BrandOnly'), 3] = 'BrandOnly'
+    col_split.loc[col_split[2].str.contains('BrandOnly', na=False), 3] = 'BrandOnly'
     col_split[2] = col_split[2].str.replace(r'\s{1,2}\[BrandOnly\]', '')
     platform = col_split[0]
     campaign_type = col_split[1]
@@ -168,7 +169,6 @@ def get_access_token_installed_app(client_secrets_path, scopes):
 
     print('Access token: %s' % flow.credentials.token)
     print('Refresh token: %s' % flow.credentials.refresh_token)
-
 
 def main():
     client = GoogleAdsClient.load_from_env()

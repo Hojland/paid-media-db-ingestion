@@ -8,3 +8,4 @@ facebook_business
 google-ads
 google-api-python-client
 oauth2client
+googleads
