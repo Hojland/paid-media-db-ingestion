@@ -266,7 +266,7 @@ def main():
         conversion_df['conversions_value'] = conversion_df['conversions_value'] / 1000
 
         dtype_trans = sql.get_dtype_trans(conversion_df)
-        dtype_trans.update({'campaign_name': String(100), 'campaign': String(100), 'site': String(100)})
+        dtype_trans.update({'campaign_name': String(150), 'campaign': String(150), 'site': String(100)})
         dtype_trans.update({'activity': String(100)})
         #dtype_trans.update({'creative': String(100)})
         dtype_trans.update({'date': DateTime()})
@@ -299,7 +299,7 @@ def main():
         campaign_df['site'], campaign_df['site_media'] = split_site(campaign_df['site'])
         campaign_df['media_spend'] = campaign_df['media_cost'] + campaign_df['dbm_cost']
         dtype_trans = sql.get_dtype_trans(campaign_df)
-        dtype_trans.update({'campaign_name': String(100), 'campaign': String(100), 'site': String(100)})
+        dtype_trans.update({'campaign_name': String(150), 'campaign': String(150), 'site': String(100)})
         dtype_trans.update({'creative': String(100)})
         dtype_trans.update({'date': DateTime()})
 

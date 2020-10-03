@@ -191,7 +191,7 @@ def main():
     cols = ['name', 'platform', 'campaign_type', 'brandorproduct', 'campaign', 'date', 'start_date', 'clicks', 'impressions', 'cost', 'ctr']
     google_campaign_report = google_campaign_report[cols]
     dtype_trans = sql.get_dtype_trans(google_campaign_report)
-    dtype_trans.update({'name': String(100)})
+    dtype_trans.update({'name': String(150)})
     dtype_trans.update({'campaign': String(80)})
     dtype_trans.update({'date': DateTime()})
 
@@ -219,7 +219,7 @@ def main():
     cols = ['name', 'platform', 'campaign_type', 'brandorproduct', 'campaign', 'date', 'device', 'start_date', 'clicks', 'impressions', 'cost', 'ctr']
     google_device_campaign_report = google_device_campaign_report[cols]
     dtype_trans = sql.get_dtype_trans(google_device_campaign_report)
-    dtype_trans.update({'name': String(100)})
+    dtype_trans.update({'name': String(150)})
     dtype_trans.update({'campaign': String(80)})
     dtype_trans.update({'date': DateTime()})
 
@@ -249,7 +249,7 @@ def main():
     cols = ['name', 'platform', 'campaign_type', 'brandorproduct', 'campaign', 'date', 'start_date', 'conversion_action_name', 'conversion_action_category', 'conversions', 'conversions_value']
     google_conversion_campaign_report = google_conversion_campaign_report[cols]
     dtype_trans = sql.get_dtype_trans(google_conversion_campaign_report)
-    dtype_trans.update({'name': String(100)})
+    dtype_trans.update({'name': String(150)})
     dtype_trans.update({'campaign': String(80)})
     dtype_trans.update({'date': DateTime()})
     mariadb_engine = sql_utils.create_engine(settings.MARIADB_CONFIG, db_name='output', db_type='mysql')
