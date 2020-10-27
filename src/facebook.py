@@ -42,7 +42,7 @@ class FacebookAccount:
             else:
                 raise NotImplementedError()
         except:
-            print('token expired')
+            print('token expired or api overheat')
 
     def batch_request_facebook(self, edge: str, batch_lst: list, params: dict={}, fields: list=[], request_type='GET'):
         req_params = {'access_token': self.access_token}
@@ -74,7 +74,7 @@ class FacebookAccount:
         return campaign_ids
 
     def get_insights(self, campaign: str):
-        res = self.request_facebook(edge=f'{campaign}/insights', params={'limit': '200'}, fields=['impressions', 'spend', 'ad_id', 'adset_id&level=ad'])
+        res = self.request_facebook(edge=f'{campaign}/insights', params={'limit': '200'}, fields=['impressions', 'spend', 'campaign_name', 'clicks', 'conversions', 'ctr'])
         return res
     
     def get_long_lived_access_token(self):
@@ -88,7 +88,7 @@ class FacebookAccount:
         campaign_lst_lst = utils.split_list(campaign_lst, 50)
         res_lst = []
         for campaign_batch in campaign_lst_lst:
-            batch_res = self.batch_request_facebook(edge=f'insights', batch_lst=campaign_batch, fields=['impressions', 'spend']) #, 'ad_id', 'adset_id&level=ad'
+            batch_res = self.batch_request_facebook(edge=f'insights', batch_lst=campaign_batch, fields=['impressions', 'spend', 'campaign_name']) #, 'ad_id', 'adset_id&level=ad'
             batch_res = batch_res.replace('"{', '{').replace('}"', '}').replace('\\"', '"').replace('""', '"')
             batch_res = json.loads(batch_res)
             res = jmespath.search('[].body[].data[*]. \
@@ -100,11 +100,23 @@ class FacebookAccount:
         df_insights = pd.DataFrame.from_dict(res_lst)
         return df_insights
 
+# CHECK
+# https://developers.facebook.com/docs/marketing-api/attribution
+# https://developers.facebook.com/docs/marketing-api/offline-conversions
+
+# GET 
+# System User
+
+# MAKE
+# Date filtering
+
+# TODO
+# How can we distribute by variable
 
 def main():
     account = FacebookAccount(APP_ID, APP_SECRET, ACCESS_TOKEN)
     campaigns = account.get_campaigns()
-    #res = account.get_insights(campaigns[1])
+    res = account.get_insights(campaigns[1])
     df_insights = account.get_campaign_insights_batch(campaigns)
 
 if __name__ == '__main__':
