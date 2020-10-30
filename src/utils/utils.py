@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import collections
 
 def pd_to_translate_dict(df: pd.DataFrame, col_from: str, col_to: str):
     translate_dct = dict(zip(df[col_from], df[col_to]))
@@ -26,3 +26,26 @@ def dict_zip(lst1: list, lst2: list):
     [lst1[i].update(lst2[i]) for i in range(0, len(lst1))]
     # returning lst1 because of the update method
     return lst1
+
+def flatten_dict(d, sep="_"):
+    obj = {}
+
+    def recurse(t, parent_key=""):
+        if isinstance(t, list):
+            for i in range(len(t)):
+                recurse(t[i], parent_key + sep + str(i) if parent_key else str(i))
+        elif isinstance(t, dict):
+            for k,v in t.items():
+                recurse(v, parent_key + sep + k if parent_key else k)
+        else:
+            obj[parent_key] = t
+
+    if isinstance(d, list):
+        res_list = []
+        for i in range(len(d)):
+            recurse(d[i])
+            res_list.append(obj.copy())
+        return res_list
+    else: 
+        recurse(d)
+    return obj

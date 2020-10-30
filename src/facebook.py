@@ -1,7 +1,10 @@
+%load_ext autoreload
+%autoreload 2
 import requests
 import urllib
 import jmespath
 import numpy as np
+import pandas as pd
 import json
 
 from utils import utils
@@ -19,8 +22,14 @@ class FacebookAccount:
         self.api_version = 'v8.0'
         self.base_url = 'https://graph.facebook.com/'
 
-    def request_facebook(self, edge: str, params: dict={}, fields: list=[], request_type='GET'):
+    def request_facebook(self, edge: str, params: dict={}, fields: list=[], level: list=[], time_increment: int=None, request_type='GET'):
         params.update({'access_token': self.access_token})
+
+        if time_increment:
+            params.update({'time_increment': time_increment})
+
+        if level:
+            params.update({'level': ','.join(level)})
 
         if fields:
             params.update({'fields': ','.join(fields)})
@@ -76,6 +85,20 @@ class FacebookAccount:
     def get_insights(self, campaign: str):
         res = self.request_facebook(edge=f'{campaign}/insights', params={'limit': '200'}, fields=['impressions', 'spend', 'campaign_name', 'clicks', 'conversions', 'ctr'])
         return res
+
+    def get_insights_adaccount(self, account_id: str='act_1377918625828738', time_increment: int=None):
+        res = self.request_facebook(edge=f'{account_id}/insights', params={'limit': '200'}, level=['campaign'], time_increment=time_increment, fields=['impressions', 'spend', 'campaign_name', 'clicks', 'conversions', 'ctr'])
+        res = utils.flatten_dict(res[0])
+        res = pd.DataFrame(res)
+        action_cols = [col for col in list(res) if 'action_type' in col]
+        value_cols = [col for col in list(res) if 'value' in col]
+        index_cols = [col for col in list(res) if col not in action_cols and col not in value_cols]
+        for value_col in value_cols:
+            res[value_col] = pd.to_numeric(res[value_col], errors='coerce')
+        res = res.convert_dtypes()
+        conversion_df = res.pivot_table(index='campaign_name', columns=action_cols, values=value_cols)
+        tmp = res[index_cols].merge(conversion_df, on='campaign_name')
+        return res
     
     def get_long_lived_access_token(self):
         payload = {
@@ -88,7 +111,7 @@ class FacebookAccount:
         campaign_lst_lst = utils.split_list(campaign_lst, 50)
         res_lst = []
         for campaign_batch in campaign_lst_lst:
-            batch_res = self.batch_request_facebook(edge=f'insights', batch_lst=campaign_batch, fields=['impressions', 'spend', 'campaign_name']) #, 'ad_id', 'adset_id&level=ad'
+            batch_res = self.batch_request_facebook(edge=f'insights', batch_lst=campaign_batch, fields=['impressions', 'spend', 'campaign_name', 'actions']) #, 'ad_id', 'adset_id&level=ad'
             batch_res = batch_res.replace('"{', '{').replace('}"', '}').replace('\\"', '"').replace('""', '"')
             batch_res = json.loads(batch_res)
             res = jmespath.search('[].body[].data[*]. \
@@ -99,6 +122,10 @@ class FacebookAccount:
             res_lst.extend(res)
         df_insights = pd.DataFrame.from_dict(res_lst)
         return df_insights
+
+import json
+with open('data.json', 'w') as outfile:
+    json.dump(res, outfile)
 
 # CHECK
 # https://developers.facebook.com/docs/marketing-api/attribution
@@ -115,33 +142,8 @@ class FacebookAccount:
 
 def main():
     account = FacebookAccount(APP_ID, APP_SECRET, ACCESS_TOKEN)
-    campaigns = account.get_campaigns()
-    res = account.get_insights(campaigns[1])
-    df_insights = account.get_campaign_insights_batch(campaigns)
+    #campaigns = account.get_campaigns()
+    res = account.get_insights_adaccount(time_increment=1)
 
 if __name__ == '__main__':
     main()
-
-
-
-# note to self
-# make the whole app, and then get standard-access or a system user to get an access token without expiry
-
-# Batch
-curl \
--F 'access_token=<ACCESS_TOKEN>' \
--F 'batch=[ \
-  { \
-    "method": "GET", \
-    "relative_url": "v8.0/<CAMPAIGN_ID_1>/insights?fields=impressions,spend,ad_id,adset_id&level=ad" \
-  }, \
-  { \
-    "method": "GET", \
-    "relative_url": "v8.0/<CAMPAIGN_ID_2>/insights?fields=impressions,spend,ad_id,adset_id&level=ad" \
-  }, \
-  { \
-    "method": "GET", \
-    "relative_url": "v8.0/<CAMPAIGN_ID_3>/insights?fields=impressions,spend,ad_id,adset_id&level=ad" \
-  } \
-]' \
-'https://graph.facebook.com'
