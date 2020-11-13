@@ -272,7 +272,7 @@ def main():
         dtype_trans.update({'date': DateTime()})
 
         # delete entries that may have been updated
-        if sql_utils.table_exists(mariadb_engine, 'google_cm_conversion_report'):
+        if sql_utils.table_exists_notempty(mariadb_engine, 'output', 'google_cm_conversion_report'):
             sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_conversion_report')
 
         # insert into sql
@@ -304,7 +304,7 @@ def main():
         dtype_trans.update({'date': DateTime()})
 
         # delete entries that may have been updated
-        if sql_utils.table_exists(mariadb_engine, 'google_cm_campaign_report'):
+        if sql_utils.table_exists_notempty(mariadb_engine, 'output', 'google_cm_campaign_report'):
             sql_utils.delete_date_entries_in_table(mariadb_engine, from_date, 'google_cm_campaign_report')
 
         # insert into sql

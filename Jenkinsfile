@@ -27,11 +27,16 @@ pipeline {
                         string(credentialsId: "GOOGLE_ADS_CLIENT_ID", variable: 'GOOGLE_ADS_CLIENT_ID'),
                         string(credentialsId: "GOOGLE_ADS_CLIENT_SECRET", variable: 'GOOGLE_ADS_CLIENT_SECRET'),
                         string(credentialsId: "GOOGLE_ADS_REFRESH_TOKEN", variable: 'GOOGLE_ADS_REFRESH_TOKEN'),
+                        string(credentialsId: "FACEBOOK_APP_ID", variable: 'FACEBOOK_APP_ID'),
+                        string(credentialsId: "FACEBOOK_APP_SECRET", variable: 'FACEBOOK_APP_SECRET'),
+                        string(credentialsId: "FACEBOOK_ACCESS_TOKEN", variable: 'FACEBOOK_ACCESS_TOKEN'),
                     ]) {
                             sh "docker run -t --rm -e 'MARIADB_USR=${MARIADB_USR}' -e 'MARIADB_PSW=${MARIADB_PSW}' \
                                 -e 'GOOGLE_API_KEY=${GOOGLE_API_KEY}' -e 'GOOGLE_ADS_LOGIN_CUSTOMER_ID=${GOOGLE_ADS_LOGIN_CUSTOMER_ID}' \
                                 -e 'GOOGLE_ADS_DEVELOPER_TOKEN=${GOOGLE_ADS_DEVELOPER_TOKEN}' -e 'GOOGLE_ADS_CLIENT_ID=${GOOGLE_ADS_CLIENT_ID}' \
                                 -e 'GOOGLE_ADS_CLIENT_SECRET=${GOOGLE_ADS_CLIENT_SECRET}' -e 'GOOGLE_ADS_REFRESH_TOKEN=${GOOGLE_ADS_REFRESH_TOKEN}' \
+                                -e 'FACEBOOK_APP_ID=${FACEBOOK_APP_ID}' -e 'FACEBOOK_APP_SECRET=${FACEBOOK_APP_SECRET}' \
+                                -e 'FACEBOOK_ACCESS_TOKEN=${FACEBOOK_ACCESS_TOKEN}' \
                                 '${JOB_NAME}':'${BUILD_ID}'"
                     }
                 }
