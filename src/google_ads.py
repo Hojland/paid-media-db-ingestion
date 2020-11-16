@@ -203,7 +203,7 @@ def main():
     #mariadb_engine.execute('CREATE INDEX google_campaign_report_name_IDX USING HASH ON `output`.google_campaign_report (name, platform, campaign_type, brandorproduct, campaign);')
 
     # put google_device_campaign_report to mysql database
-    if sql_utils.table_exists_notempty(mariadb_engine, 'google_device_campaign_report'):
+    if sql_utils.table_exists_notempty(mariadb_engine, 'output', 'google_device_campaign_report'):
         latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_device_campaign_report')
     else:
         latest_date = datetime.today()
