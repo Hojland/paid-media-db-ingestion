@@ -1,6 +1,7 @@
 pandas
 numpy
 pymysql
+mysqlclient
 sqlalchemy
 tqdm
 jmespath
