@@ -26,8 +26,8 @@ COPY src/ /app/
 
 COPY requirements.txt /app
 
-RUN pip install -r requirements.txt --no-cache-dir
-
 WORKDIR /app
+
+RUN pip install -r requirements.txt --no-cache-dir
 
 CMD ["sh", "-c", "python main.py"]
