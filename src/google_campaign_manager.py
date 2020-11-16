@@ -312,7 +312,7 @@ def main():
 
         #mariadb_engine.execute('CREATE INDEX google_cm_campaign_report_date_IDX USING BTREE ON `output`.google_cm_campaign_report (date);')
         #mariadb_engine.execute('CREATE INDEX google_cm_campaign_report_dim_IDX USING HASH ON `output`.google_cm_campaign_report (brand, product, campaign_name, advertiser, site);')
-        
+
         buytype_campaign = get_programmatic_campaigns(mariadb_engine, campaign_df['campaign_name'])
         buytype_campaign.to_sql('google_cm_programmatic_dim', con=mariadb_engine, if_exists='replace', index=False)
 
