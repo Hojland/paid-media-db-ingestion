@@ -155,7 +155,7 @@ class FacebookAccount:
                                     fields=['impressions', 'spend', 'campaign_name', 'clicks', 'conversions', 'ctr', 'conversion_values'],
                                     breakdown=['age'], date_preset=date_preset, time_range=time_range)
         res = utils.flatten_dict(res)
-        res = [utils.dict_key_val_pair_eliminate(dct, pair_id_re='\d{1}', key_id_re='action_type', val_id_re='value') for dct in res]
+        res = [utils.dict_key_val_pair_eliminate(dct, pair_id_re='(conversions_|conversion_values_)\d{1}', key_id_re='action_type', val_id_re='value') for dct in res]
         df = pd.DataFrame(res)
         # pivot with aggregation to delete
         index_cols = ['campaign_name', 'date_start', 'date_stop']
