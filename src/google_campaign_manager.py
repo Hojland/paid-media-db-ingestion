@@ -247,7 +247,7 @@ def main():
         mariadb_engine = sql_utils.create_engine(settings.MARIADB_CONFIG, db_name='output', db_type='mysql')
 
         # get conversion report
-        if sql_utils.table_exists_empty(mariadb_engine, 'google_cm_conversion_report'):
+        if sql_utils.table_exists_notempty(mariadb_engine, 'output', 'google_cm_conversion_report'):
             latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_cm_conversion_report')
         else:
             latest_date = datetime.today()
@@ -282,7 +282,7 @@ def main():
         #mariadb_engine.execute('CREATE INDEX google_cm_conversion_report_dim_IDX USING HASH ON `output`.google_cm_conversion_report (brand, product, campaign_name, activity, advertiser);') #creative
 
         # get campaign report
-        if sql_utils.table_exists_empty(mariadb_engine, 'google_cm_campaign_report'):
+        if sql_utils.table_exists_notempty(mariadb_engine, 'output', 'google_cm_campaign_report'):
             latest_date = sql_utils.get_latest_date_in_table(mariadb_engine, 'google_cm_campaign_report')
         else:
             latest_date = datetime.today()
