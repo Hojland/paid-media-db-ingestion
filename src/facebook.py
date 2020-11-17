@@ -164,7 +164,9 @@ class FacebookAccount:
             df = pd.wide_to_long(df, stubnames=['offsite_conversion.fb_pixel_custom'], i=index_cols, j='conversion_name', sep='.', suffix='(?!\.)[a-zA-Z\d_]*$').reset_index()
             df['conversion_name'] = df['conversion_name'].str.extract('(.*)(?=_\d)')
             df = pd.pivot_table(df, values='offsite_conversion.fb_pixel_custom', columns=['conversion_name'], index=index_cols + other_static_fields, aggfunc=np.sum)
-            df = pd.DataFrame(df.to_records()).drop('level_0', axis=1)
+            df = pd.DataFrame(df.to_records())
+            if 'level_0' in list(df):
+                df = df.drop('level_0', axis=1)
         else:
             df.columns = [re.search('(^.*?)(?=_\d|$)', col)[0] for col in df.columns]
         return df
@@ -195,16 +197,12 @@ class FacebookAccount:
         df_insights = pd.DataFrame.from_dict(res_lst)
         return df_insights
 
-def ingest_facebook_campaigns(account: FacebookAccount, mariadb_engine: sqlalchemy.engine, from_date, to_date):
-    df = account.get_insights_adaccount(time_increment=1, time_range={'since': from_date, 'until': to_date})
-    df['date'] = pd.to_datetime(df['date_start'])
-    df = df.drop(['date_start', 'date_stop'], axis=1)
-
-    if sql_utils.table_exists_notempty(mariadb_engine, 'output', 'facebook_campaign_report'):
+def sql_handler(mariadb_engine: sqlalchemy.engine, df: pd.DataFrame, index_lst: list, schema_name: str, table_name: str):
+    if sql_utils.table_exists_notempty(mariadb_engine, schema_name, table_name):
         min_date = df['date'].min().strftime('%Y-%m-%d')
-        sql_utils.delete_date_entries_in_table(mariadb_engine, min_date, 'facebook_campaign_report')
+        sql_utils.delete_date_entries_in_table(mariadb_engine, min_date, table_name)
         
-        sql_table_cols = sql_utils.table_col_names(mariadb_engine, 'output', 'facebook_campaign_report')
+        sql_table_cols = sql_utils.table_col_names(mariadb_engine, schema_name, table_name)
         new_cols = [col for col in list(df) if col not in sql_table_cols]
     else:
         new_cols = []
@@ -212,13 +210,38 @@ def ingest_facebook_campaigns(account: FacebookAccount, mariadb_engine: sqlalche
     dtype_trans = sql_utils.get_dtype_trans_mysql(df, str_len=200)
     
     # maybe make index hash instead using dict? or?
-    sql_utils.create_table(mariadb_engine, 'output.facebook_campaign_report', col_datatype_dct=dtype_trans, index_lst=['date', 'campaign_name'])
+    sql_utils.create_table(mariadb_engine, f'{schema_name}.{table_name}', col_datatype_dct=dtype_trans, index_lst=index_lst)
     
     if new_cols:
         new_col_datatype_dct = {x: dtype_trans[x] for x in new_cols if x in dtype_trans}
-        sql_utils.add_columns_to_table(mariadb_engine, 'output.facebook_campaign_report', new_col_datatype_dct)
+        sql_utils.add_columns_to_table(mariadb_engine, f'{schema_name}.{table_name}', new_col_datatype_dct)
 
-    sql_utils.df_to_sql(mariadb_engine, df, 'output.facebook_campaign_report')
+    sql_utils.df_to_sql(mariadb_engine, df, f'{schema_name}.{table_name}')
+
+
+def ingest_facebook_campaigns(account: FacebookAccount, mariadb_engine: sqlalchemy.engine, from_date, to_date):
+    df = account.get_insights_adaccount(time_increment=1, time_range={'since': from_date, 'until': to_date})
+    df['date'] = pd.to_datetime(df['date_start'])
+    df = df.drop(['date_start', 'date_stop'], axis=1)
+    
+    index_lst = ['date', 'campaign_name']
+    base_stats_lst = ['clicks', 'ctr', 'spend', 'impressions']
+    other_cols = [col for col in list(df) if col not in index_lst and col not in base_stats_lst]
+    base_df = df[index_lst + base_stats_lst]
+    conversion_df = df[index_lst + other_cols]
+
+    if other_cols:
+        conversion_df.columns = [re.search('conversion(_values|)', col)[0] + '-' + re.search('(^.*)(?=conversion_values|conversion)', col)[0]
+                                if col in other_cols else col for col in conversion_df.columns]
+        # maybe just switch so that suffix becomes prefix, and then use them as stubnames?
+        conversion_df = pd.wide_to_long(conversion_df, stubnames=['conversion', 'conversion_values'],
+                            i=index_lst, j='conversion_name', sep='-', suffix='(?!-)(.*?$)').reset_index()
+        conversion_df['conversion_name'] = conversion_df['conversion_name'].str.extract('(.*)(?=_$)')
+
+    sql_handler(mariadb_engine, base_df, index_lst, 'output', 'facebook_campaign_report')
+
+    sql_handler(mariadb_engine, conversion_df, index_lst, 'output', 'facebook_campaign_conversion_report')
+
 
 def main():
     mariadb_engine = sql_utils.create_engine(settings.MARIADB_CONFIG, db_name='output', db_type='mysql')
@@ -231,9 +254,10 @@ def main():
         ingest_facebook_campaigns(account, mariadb_engine, from_date, to_date)
     else:
         for months in range(0, 12, 1):
-            print(months)
             from_date, to_date = from_date_to_date(365-30*months, 29)
+            print(f"going through date {from_date} to date {to_date}")
             ingest_facebook_campaigns(account, mariadb_engine, from_date, to_date)
+
 
 
 if __name__ == '__main__':
