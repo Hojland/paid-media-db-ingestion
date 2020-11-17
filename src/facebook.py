@@ -21,7 +21,6 @@ APP_ID = os.getenv('FACEBOOK_APP_ID')
 APP_SECRET = os.getenv('FACEBOOK_APP_SECRET')
 ACCESS_TOKEN = os.getenv('FACEBOOK_ACCESS_TOKEN')
 
-
 def from_date_to_date(days_since_start, plus_days):
     from_date = datetime.today()-timedelta(days=days_since_start)
     to_date = from_date+timedelta(days=plus_days)
@@ -226,6 +225,7 @@ def ingest_facebook_campaigns(account: FacebookAccount, mariadb_engine: sqlalche
     
     index_lst = ['date', 'campaign_name']
     base_stats_lst = ['clicks', 'ctr', 'spend', 'impressions']
+    df[base_stats_lst] = df[base_stats_lst].astype(float)
     other_cols = [col for col in list(df) if col not in index_lst and col not in base_stats_lst]
     base_df = df[index_lst + base_stats_lst]
     conversion_df = df[index_lst + other_cols]
