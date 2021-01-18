@@ -29,7 +29,7 @@ pipeline {
                         string(credentialsId: "GOOGLE_ADS_REFRESH_TOKEN", variable: 'GOOGLE_ADS_REFRESH_TOKEN'),
                         string(credentialsId: "FACEBOOK_APP_ID", variable: 'FACEBOOK_APP_ID'),
                         string(credentialsId: "FACEBOOK_APP_SECRET", variable: 'FACEBOOK_APP_SECRET'),
-                        string(credentialsId: "FACEBOOK_ACCESS_TOKEN", variable: 'FACEBOOK_ACCESS_TOKEN'),
+                        string(credentialsId: "FACEBOOK_API_TOKEN_2", variable: 'FACEBOOK_ACCESS_TOKEN'),
                     ]) {
                             sh "docker run -t --rm -e 'MARIADB_USR=${MARIADB_USR}' -e 'MARIADB_PSW=${MARIADB_PSW}' \
                                 -e 'GOOGLE_API_KEY=${GOOGLE_API_KEY}' -e 'GOOGLE_ADS_LOGIN_CUSTOMER_ID=${GOOGLE_ADS_LOGIN_CUSTOMER_ID}' \

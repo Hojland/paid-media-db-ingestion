@@ -12,4 +12,4 @@ if __name__ == "__main__":
     facebook.main()
 
     mariadb_engine = sql_utils.create_engine(settings.MARIADB_CONFIG, db_name='output', db_type='mysql')
-    mariadb_engine.execute(sql.COLLECTED_VIEW)
+    res = mariadb_engine.execute(sql.COLLECTED_VIEW)

@@ -36,7 +36,6 @@ def delegated_access_service_account():
 
 
 def query_dfa_campaign(query: str, client: client, profile_id: str):
-
     request = client.campaigns().list(profileId=profile_id)
     cols = ['id', 'name'] # temporary until better is found
     campaigns = []

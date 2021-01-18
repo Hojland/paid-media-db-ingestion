@@ -35,22 +35,22 @@ def get_dtype_trans(df: pd.DataFrame):
     return dtype_trans
 
 COLLECTED_VIEW = '''
-CREATE VIEW IF NOT EXISTS output.v_paid_campaign_report AS
-WITH facebook AS (
-	SELECT campaign_name, clicks, spend, impressions, ctr, date, 'facebook' as channel
-	FROM output.facebook_campaign_report),
-google_cm AS (
-	SELECT campaign as campaign_name, clicks, media_spend as spend, impressions, clicks / impressions as ctr, date, 'google_campaign_manager' as channel
-	FROM output.google_cm_campaign_report),
-google_ads AS (
-	SELECT name as campaign_name, clicks, cost as spend, impressions, ctr, date, 'google_ads' as channel
-	FROM output.google_campaign_report)
-SELECT *
-FROM facebook
-UNION ALL
-SELECT * 
-FROM google_cm
-UNION ALL
-SELECT *
-FROM google_ads
+    CREATE VIEW IF NOT EXISTS output.v_paid_campaign_report AS
+    WITH facebook AS (
+        SELECT campaign_name, clicks, spend, impressions, ctr, date, 'facebook' as channel
+        FROM output.facebook_campaign_report),
+    google_cm AS (
+        SELECT campaign as campaign_name, clicks, media_spend as spend, impressions, clicks / impressions as ctr, date, 'google_campaign_manager' as channel
+        FROM output.google_cm_campaign_report),
+    google_ads AS (
+        SELECT name as campaign_name, clicks, cost as spend, impressions, ctr, date, 'google_ads' as channel
+        FROM output.google_campaign_report)
+    SELECT *
+    FROM facebook
+    UNION ALL
+    SELECT * 
+    FROM google_cm
+    UNION ALL
+    SELECT *
+    FROM google_ads
 '''
