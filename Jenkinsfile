@@ -5,11 +5,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([
-                            usernamePassword(credentialsId: 'datascience-harbor', usernameVariable: 'DOCKER_USR', passwordVariable: 'DOCKER_PW'),
                             file(credentialsId: 'paid-media-db-ingestion-e95489028100.json', variable: 'gcm_credentialfile')
                         ])
                     {
-                    sh "docker login -u '${DOCKER_USR}' -p ${DOCKER_PW} https://harbor.aws.c.dk/"
                     sh "cp ${gcm_credentialfile} paid-media-db-ingestion-e95489028100.json"
                     image = docker.build("${JOB_NAME}:${BUILD_ID}", '--build-arg GCM_CREDENTIAL_FILE=paid-media-db-ingestion-e95489028100.json .')
                     }
